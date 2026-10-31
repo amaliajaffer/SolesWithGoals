@@ -1,0 +1,47 @@
+---
+// Horizontal lockup: ring + "Soles / with Goals" (Bricolage ExtraBold with
+// Atkinson Hyperlegible Italic), as in her logo system.
+import GoalRing from './GoalRing.astro';
+
+interface Props {
+  dark?: boolean;
+  size?: number;
+}
+const { dark = false, size = 40 } = Astro.props;
+---
+
+<span class:list={['logo', { 'logo--dark': dark }]}>
+  <GoalRing tone={dark ? 'reversed' : 'primary'} size={size} />
+  <span class="wordmark">
+    <span>Soles</span>
+    <span><em>with</em> Goals</span>
+  </span>
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--navy);
+  }
+  .logo--dark {
+    color: var(--cream);
+  }
+  .wordmark {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 19px;
+    line-height: 1;
+  }
+  em {
+    font-family: var(--font-body);
+    font-weight: 400;
+    color: var(--rasp);
+  }
+  .logo--dark em {
+    color: var(--rasp-on-dark);
+  }
+</style>

@@ -1,0 +1,106 @@
+---
+// Home hero with her photos: her own trail-run clip, slowed down, in a
+// running-track oval. Paused or reduced motion shows the still.
+import { Image } from 'astro:assets';
+import GoalRing from './GoalRing.astro';
+import PauseButton from './PauseButton.astro';
+import runStill from '../assets/photos/run-still.jpg';
+import { link, type Variant } from '../lib/variant';
+import { copy } from '../data/copy';
+
+interface Props {
+  variant: Variant;
+}
+const { variant } = Astro.props;
+---
+
+<section class="hero band-navy on-dark" aria-labelledby="hero-title">
+  <div class="wrap inner">
+    <div class="stack text">
+      <h1 id="hero-title" class="h1">{copy.essence}</h1>
+      <p class="lead">{copy.heroLine}</p>
+      <div class="row">
+        <a class="btn btn--primary" href={link(variant, 'the-5k')}>Join the 5K</a>
+        <a class="btn btn--light" href={link(variant, 'get-involved')}>Get involved</a>
+      </div>
+    </div>
+    <figure class="media" id="hero-clip">
+      <div class="oval">
+        <img class="clip-anim" src="/media/run-loop.webp" width="540" height="720" alt="" fetchpriority="low" decoding="async" />
+        <Image class="clip-still" src={runStill} widths={[400, 540]} sizes="(max-width: 760px) 80vw, 400px" loading="eager" fetchpriority="high" alt="Amalia running along a park trail" />
+      </div>
+      <GoalRing tone="reversed" size={112} draw class="media-ring" />
+    </figure>
+  </div>
+  <PauseButton target="hero-clip" label="Pause the running clip" class="hero-pause" />
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+  }
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 40px 64px;
+    padding-top: 64px;
+    padding-bottom: 104px;
+  }
+  .text {
+    flex: 1 1 460px;
+    min-width: 0;
+    max-width: 640px;
+    gap: 24px;
+  }
+  .media {
+    position: relative;
+    flex: 0 1 400px;
+    margin: 0 auto;
+  }
+  .oval {
+    position: relative;
+    width: min(400px, 100%);
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border: 4px solid var(--aqua);
+    border-radius: 999px;
+    background: var(--navy-800);
+  }
+  .oval img,
+  .oval :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .media :global(.media-ring) {
+    position: absolute;
+    top: -14px;
+    left: -18px;
+  }
+  .hero :global(.hero-pause) {
+    position: absolute;
+    bottom: 28px;
+    left: var(--gutter);
+  }
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      translate: 0 24px;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .text > * {
+      animation: hero-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    .text > :nth-child(2) {
+      animation-delay: 0.15s;
+    }
+    .text > :nth-child(3) {
+      animation-delay: 0.3s;
+    }
+  }
+</style>

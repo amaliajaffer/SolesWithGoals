@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import GoalRing from '../components/GoalRing.astro';
+---
+
+<Base title="Page not found" description="We couldn’t find that page." variant="plain">
+  <section class="sec">
+    <div class="wrap nf">
+      <GoalRing size={220} draw />
+      <div class="stack gap-m">
+        <p class="eyebrow">404</p>
+        <h1 class="h1">Page not found</h1>
+        <p class="lead">We couldn’t find that page. It may have moved, or the link might have a typo.</p>
+        <div class="row">
+          <a class="btn btn--primary" href="/">Back to home</a>
+          <a class="btn" href="/the-5k/">See the 5K</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 48px 64px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+  .nf > .stack {
+    flex: 1 1 380px;
+    min-width: 0;
+  }
+  .gap-m {
+    gap: 18px;
+  }
+</style>

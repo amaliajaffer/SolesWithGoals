@@ -1,0 +1,142 @@
+---
+import Base from '../../layouts/Base.astro';
+import { variantPaths, link, type Variant } from '../../lib/variant';
+import { copy } from '../../data/copy';
+
+export function getStaticPaths() {
+  return variantPaths();
+}
+const { variant } = Astro.props as { variant: Variant };
+const i = copy.impact;
+const first = i.modules[0];
+---
+
+<Base title="Impact" description={i.title} variant={variant} current="impact">
+  <section class="sec">
+    <div class="wrap stack gap-m">
+      <p class="eyebrow">Impact</p>
+      <h1 class="h1 title">{i.title}</h1>
+    </div>
+  </section>
+
+  <section class="sec band-navy on-dark">
+    <div class="wrap stack gap-l">
+      <p class="eyebrow">A first look · Module 1</p>
+      <h2 class="h2 narrowish">{first.title}</h2>
+      <div class="soon soon--dark">
+        <strong>Module 1 preview coming soon</strong>
+        <span>A sneak peek at the first slides of Module 1.</span>
+      </div>
+      <a class="btn btn--primary self-start" href={link(variant, 'get-involved')}>I’m interested</a>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap stack gap-l">
+      <p class="eyebrow">The modules</p>
+      <p class="intro">{i.modulesIntro}</p>
+      <div class="grid">
+        {
+          i.modules.map((module, index) => (
+            <article class:list={['card', { 'card--first': index === 0 }]}>
+              <p class="eyebrow">Module {index + 1}</p>
+              <h2 class="h3">{module.title}</h2>
+              {module.text && <p>{module.text}</p>}
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="sec band-cream">
+    <div class="wrap stack gap-l">
+      <p class="eyebrow">Resources</p>
+      <h2 class="h2 narrowish">{i.resourcesTitle}</h2>
+      <div class="grid">
+        {
+          i.resources.map((resource) => (
+            <article class="card">
+              <h3 class="h3">{resource.title}</h3>
+              <p class="tag">PDF · English and Urdu</p>
+              <div class="push">
+                {resource.file ? (
+                  <a class="btn btn--primary" href={resource.file} download>
+                    Download
+                  </a>
+                ) : (
+                  <span class="btn btn--soon">{resource.status ?? 'Coming soon'}</span>
+                )}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap stack gap-m">
+      <h2 class="h2 narrowish">{i.coachTitle}</h2>
+      <p class="measure">{i.coachText}</p>
+      <aside class="health">
+        <strong>Health note</strong>
+        <span>These guides are for learning only. They aren’t medical advice and can’t replace a doctor or nurse. In an emergency, call emergency services.</span>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .title {
+    max-width: 22ch;
+    font-size: clamp(38px, 4.8vw, 68px);
+  }
+  .gap-m {
+    gap: 20px;
+  }
+  .gap-l {
+    gap: 28px;
+  }
+  .narrowish {
+    max-width: 28ch;
+  }
+  .self-start {
+    align-self: flex-start;
+  }
+  .soon--dark {
+    border-color: var(--aqua);
+    background: transparent;
+    color: var(--cream);
+  }
+  .soon--dark span {
+    color: var(--navy-100);
+  }
+  .intro {
+    max-width: 48ch;
+    font-family: var(--font-display);
+    font-size: clamp(22px, 2.4vw, 30px);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .card--first {
+    border: 2px solid var(--rasp);
+  }
+  .tag {
+    color: var(--navy-700);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .push {
+    margin-top: auto;
+  }
+  .health {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 860px;
+    padding: 20px 24px;
+    border: 2px solid var(--navy);
+    border-radius: 14px;
+  }
+</style>

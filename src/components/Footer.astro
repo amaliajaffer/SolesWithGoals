@@ -1,0 +1,128 @@
+---
+import Logo from './Logo.astro';
+import { link, type Variant } from '../lib/variant';
+import { site } from '../data/site';
+import { copy } from '../data/copy';
+
+interface Props {
+  variant: Variant;
+}
+const { variant } = Astro.props;
+const explore = [
+  { label: 'About', path: 'about' },
+  { label: 'The 5K', path: 'the-5k' },
+  { label: 'Our Approach', path: 'approach' },
+  { label: 'Impact', path: 'impact' },
+  { label: 'Stories', path: 'stories' },
+  ...(site.film ? [{ label: 'Film', path: 'film' }] : []),
+];
+---
+
+<footer class="footer band-navy on-dark">
+  <div class="wrap top">
+    <div class="brand stack">
+      <Logo dark size={44} />
+      <p class="essence">{copy.essence}</p>
+      <p class="tag">{site.hashtag}</p>
+    </div>
+    <nav class="cols" aria-label="Footer">
+      <div>
+        <h2 class="label">Explore</h2>
+        <ul>{explore.map((item) => <li><a href={link(variant, item.path)}>{item.label}</a></li>)}</ul>
+      </div>
+      <div>
+        <h2 class="label">Get involved</h2>
+        <ul>
+          {copy.involved.roles.map((role) => <li><a href={link(variant, `get-involved#${role.id}`)}>{role.title}</a></li>)}
+        </ul>
+      </div>
+      <div>
+        <h2 class="label">Contact</h2>
+        <ul>
+          {site.email ? <li><a href={`mailto:${site.email}`}>{site.email}</a></li> : <li class="soon-text">Contact details coming soon</li>}
+          {site.socials.map((social) => <li><a href={social.url} rel="noopener">{social.label}</a></li>)}
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="wrap bottom">
+    {!site.confirmed.sop && <p>We’re a student-led community, and we’re not affiliated with Special Olympics.</p>}
+    <p>© 2026 Soles with Goals · <a href={link(variant, 'privacy')}>Privacy</a></p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding: 56px 0 32px;
+  }
+  .top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 32px 56px;
+  }
+  .brand {
+    flex: 1 1 260px;
+    gap: 14px;
+  }
+  .essence {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 800;
+  }
+  .tag {
+    color: var(--aqua);
+    font-size: 15px;
+  }
+  .cols {
+    display: flex;
+    flex: 2 1 520px;
+    flex-wrap: wrap;
+    gap: 28px 56px;
+  }
+  .label {
+    margin-bottom: 10px;
+    color: var(--aqua);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li a {
+    display: inline-block;
+    padding: 4px 0;
+    color: var(--cream);
+    font-size: 16px;
+    text-decoration: none;
+  }
+  li a:hover {
+    color: var(--aqua);
+  }
+  .soon-text {
+    color: var(--navy-100);
+    font-size: 15px;
+  }
+  .bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px 24px;
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px solid var(--navy-700);
+    color: var(--navy-100);
+    font-size: 14px;
+  }
+  .bottom a {
+    color: var(--cream);
+  }
+</style>

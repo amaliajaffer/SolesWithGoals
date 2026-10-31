@@ -1,0 +1,88 @@
+---
+// Review build only: flip any page between the two versions.
+import { otherVersion, type Variant } from '../lib/variant';
+
+interface Props {
+  variant: Variant;
+}
+const { variant } = Astro.props;
+const other = otherVersion(Astro.url.pathname);
+---
+
+<nav class="review" aria-label="Review versions">
+  <span class="tag">Review build</span>
+  {
+    variant === 'plain' ? (
+      <>
+        <span class="on" aria-current="true">Without photos</span>
+        <a href={other.href}>With her photos</a>
+      </>
+    ) : (
+      <>
+        <a href={other.href}>Without photos</a>
+        <span class="on" aria-current="true">With her photos</span>
+      </>
+    )
+  }
+</nav>
+
+<style>
+  .review {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid var(--note-line);
+    border-radius: 999px;
+    background: var(--note-bg);
+    box-shadow: 0 6px 18px rgba(7, 25, 90, 0.18);
+    font-size: 14px;
+    view-transition-name: review-bar;
+  }
+  .tag {
+    padding: 0 8px 0 10px;
+    color: var(--note-text);
+    font-weight: 700;
+  }
+  a,
+  .on {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 14px;
+    border-radius: 999px;
+    color: var(--navy);
+    text-decoration: none;
+  }
+  .on {
+    background: var(--navy);
+    color: var(--white);
+    font-weight: 700;
+  }
+  a:hover {
+    background: var(--white);
+  }
+  .tag,
+  a,
+  .on {
+    white-space: nowrap;
+  }
+  @media (max-width: 520px) {
+    .review {
+      left: 50%;
+      font-size: 13px;
+      translate: -50% 0;
+    }
+    .tag {
+      padding: 0 4px 0 8px;
+    }
+    a,
+    .on {
+      padding: 0 10px;
+    }
+  }
+</style>

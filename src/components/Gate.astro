@@ -1,0 +1,30 @@
+---
+// Content that needs a written OK (Special Olympics Pakistan, the fundraiser).
+// Live once confirmed; until then it shows only in the review build, outlined
+// and labelled, and is left out of the live site.
+import { site } from '../data/site';
+
+interface Props {
+  confirmed: boolean;
+  note: string;
+  inline?: boolean;
+}
+const { confirmed, note, inline = false } = Astro.props;
+const pending = !confirmed && site.review;
+---
+
+{
+  confirmed ? (
+    <slot />
+  ) : pending ? (
+    inline ? (
+      <span class="gate-inline" title={note}>
+        <slot />
+      </span>
+    ) : (
+      <div class="gate" data-note={note}>
+        <slot />
+      </div>
+    )
+  ) : null
+}

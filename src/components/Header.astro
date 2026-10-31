@@ -1,0 +1,257 @@
+---
+import Logo from './Logo.astro';
+import { link, type Variant } from '../lib/variant';
+import { site, showPending } from '../data/site';
+
+interface Props {
+  variant: Variant;
+  current?: string;
+}
+const { variant, current } = Astro.props;
+
+const nav = [
+  { key: 'about', label: 'About', path: 'about' },
+  { key: '5k', label: 'The 5K', path: 'the-5k' },
+  { key: 'approach', label: 'Our Approach', path: 'approach' },
+  { key: 'impact', label: 'Impact', path: 'impact' },
+  { key: 'stories', label: 'Stories', path: 'stories' },
+  { key: 'involved', label: 'Get involved', path: 'get-involved' },
+];
+const donateReady = site.confirmed.donate && site.confirmed.sop;
+const showDonate = showPending(donateReady);
+---
+
+<header class="site-header">
+  <div class="bar wrap">
+    <a class="home" href={link(variant, '/')} aria-label="Soles with Goals, home"><Logo /></a>
+    <nav class="nav" aria-label="Main">
+      <ul>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={link(variant, item.path)} aria-current={current === item.key ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    {
+      showDonate && (
+        <a
+          class:list={['donate', { gate: !donateReady }]}
+          data-note="needs D2 + D3"
+          href={link(variant, 'fundraising')}
+          aria-current={current === 'donate' ? 'page' : undefined}
+        >
+          Donate
+        </a>
+      )
+    }
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Menu">
+      <svg class="i-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+      <svg class="i-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </button>
+  </div>
+  <nav id="site-menu" class="panel" aria-label="Menu" hidden>
+    <ul class="wrap">
+      {
+        nav.map((item, index) => (
+          <li style={`--i: ${index}`}>
+            <a href={link(variant, item.path)} aria-current={current === item.key ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+      {
+        showDonate && (
+          <li style={`--i: ${nav.length}`}>
+            <a
+              class:list={['quiet', { gate: !donateReady }]}
+              data-note="needs D2 + D3"
+              href={link(variant, 'fundraising')}
+              aria-current={current === 'donate' ? 'page' : undefined}
+            >
+              Donate
+            </a>
+          </li>
+        )
+      }
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.menu-btn');
+  const panel = document.getElementById('site-menu');
+  const setOpen = (open: boolean) => {
+    button?.setAttribute('aria-expanded', String(open));
+    if (panel) panel.hidden = !open;
+  };
+  button?.addEventListener('click', () => setOpen(button.getAttribute('aria-expanded') !== 'true'));
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && button?.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      button.focus();
+    }
+  });
+</script>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 20;
+    border-bottom: 1px solid var(--navy-100);
+    background: var(--white);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 12px 28px;
+    min-height: 84px;
+  }
+  .home {
+    margin-right: auto;
+    text-decoration: none;
+  }
+  ul {
+    list-style: none;
+  }
+  /* Leave the menu panel's .wrap gutter alone. */
+  ul:not(.wrap) {
+    margin: 0;
+    padding: 0;
+  }
+  .nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 22px;
+  }
+  /* Review build: the note sits under the link, since the header is at the top edge. */
+  .donate.gate::before {
+    top: auto;
+    right: 0;
+    bottom: -14px;
+  }
+  .nav a,
+  .donate {
+    display: inline-block;
+    padding: 12px 0;
+    color: var(--navy);
+    font-size: 16px;
+    text-decoration: none;
+    background: linear-gradient(var(--rasp), var(--rasp)) left calc(100% - 6px) / 0 3px no-repeat;
+    transition: background-size 0.25s ease;
+  }
+  .nav a:hover,
+  .donate:hover,
+  .nav a[aria-current='page'],
+  .donate[aria-current='page'] {
+    background-size: 100% 3px;
+    color: var(--navy);
+  }
+  .nav a[aria-current='page'],
+  .donate[aria-current='page'] {
+    font-weight: 700;
+  }
+  .donate {
+    color: var(--navy-700);
+    font-size: 15px;
+  }
+  .menu-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 2px solid var(--navy);
+    border-radius: 12px;
+    background: var(--white);
+    color: var(--navy);
+    cursor: pointer;
+  }
+  .i-close {
+    display: none;
+  }
+  .menu-btn[aria-expanded='true'] .i-close {
+    display: block;
+  }
+  .menu-btn[aria-expanded='true'] .i-open {
+    display: none;
+  }
+  .panel {
+    border-top: 1px solid var(--navy-100);
+    padding: 4px 0 20px;
+  }
+  .panel a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    border-bottom: 1px solid var(--navy-100);
+    color: var(--navy);
+    font-size: 18px;
+    text-decoration: none;
+  }
+  .panel a[aria-current='page'] {
+    font-weight: 700;
+  }
+  .panel a[aria-current='page']::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--rasp);
+  }
+  .panel .quiet {
+    color: var(--navy-700);
+  }
+  /* The menu drops open and its links follow one after another. */
+  @keyframes menu-open {
+    from {
+      opacity: 0;
+      translate: 0 -8px;
+    }
+  }
+  @keyframes menu-link {
+    from {
+      opacity: 0;
+      translate: -12px 0;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .panel:not([hidden]) {
+      animation: menu-open 0.25s ease both;
+    }
+    .panel:not([hidden]) li {
+      animation: menu-link 0.32s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      animation-delay: calc(var(--i, 0) * 35ms + 60ms);
+    }
+  }
+  .menu-btn svg {
+    transition: rotate 0.25s ease;
+  }
+  .menu-btn[aria-expanded='true'] .i-close {
+    rotate: 90deg;
+  }
+  @media (max-width: 760px) {
+    .nav,
+    .donate {
+      display: none;
+    }
+    .menu-btn {
+      display: flex;
+    }
+    .bar {
+      min-height: 68px;
+    }
+  }
+  @media (min-width: 761px) {
+    .panel {
+      display: none !important;
+    }
+  }
+</style>

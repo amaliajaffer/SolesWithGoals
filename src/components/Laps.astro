@@ -1,0 +1,64 @@
+---
+// The four parts of each session, drawn as laps of a track. Once seen, the laps
+// arrive in order and the module lap (the last one) gives a small pulse.
+import { copy } from '../data/copy';
+---
+
+<ol class="laps" aria-label="Each session" data-inview>
+  {
+    copy.programme.sessions.map((part, index) => (
+      <li class:list={['lap', 'step', { 'lap--module': index === copy.programme.sessions.length - 1 }]} style={`--i: ${index}`}>
+        <span class="n">{index + 1}</span>
+        {part}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .laps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .lap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-height: 112px;
+    padding: 12px 22px;
+    border: 2px solid var(--navy);
+    border-radius: 999px;
+    background: var(--white);
+    text-align: center;
+  }
+  .n {
+    color: var(--rasp);
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 800;
+  }
+  .lap--module {
+    border-color: var(--rasp);
+    background: var(--rasp);
+    color: var(--white);
+  }
+  .lap--module .n {
+    color: var(--white);
+  }
+  @keyframes lap-pulse {
+    50% {
+      box-shadow: 0 0 0 10px rgba(220, 15, 94, 0.18);
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .laps.in-view .lap--module {
+      animation: lap-pulse 0.9s ease 0.6s 1;
+    }
+  }
+</style>

@@ -1,0 +1,56 @@
+---
+// Pauses moving content (WCAG 2.2.2) by adding .is-paused to the target.
+interface Props {
+  target: string;
+  label: string;
+  class?: string;
+}
+const { target, label, class: className } = Astro.props;
+---
+
+<button type="button" class:list={['pause', className]} data-target={target} aria-pressed="false" aria-label={label}>
+  <svg class="i-pause" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M9 6v12M15 6v12"></path></svg>
+  <svg class="i-play" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+</button>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('button.pause').forEach((button) => {
+    const target = document.getElementById(button.dataset.target ?? '');
+    button.addEventListener('click', () => {
+      const paused = button.getAttribute('aria-pressed') !== 'true';
+      button.setAttribute('aria-pressed', String(paused));
+      target?.classList.toggle('is-paused', paused);
+    });
+  });
+</script>
+
+<style>
+  .pause {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 2px solid var(--cream);
+    border-radius: 999px;
+    background: var(--navy);
+    color: var(--cream);
+    cursor: pointer;
+  }
+  .i-play {
+    display: none;
+  }
+  .pause[aria-pressed='true'] .i-play {
+    display: block;
+  }
+  .pause[aria-pressed='true'] .i-pause {
+    display: none;
+  }
+  /* Nothing moves under reduced motion, so there's nothing to pause. */
+  @media (prefers-reduced-motion: reduce) {
+    .pause {
+      display: none;
+    }
+  }
+</style>

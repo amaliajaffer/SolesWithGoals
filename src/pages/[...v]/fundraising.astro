@@ -1,0 +1,88 @@
+---
+// Built only in the review build until Special Olympics Pakistan has
+// confirmed in writing and the adult-owned fundraiser exists (plan D2, D3).
+import Base from '../../layouts/Base.astro';
+import GoalRing from '../../components/GoalRing.astro';
+import { variantPaths, link, type Variant } from '../../lib/variant';
+import { copy } from '../../data/copy';
+import { site } from '../../data/site';
+
+export function getStaticPaths() {
+  return variantPaths(site.confirmed.sop && site.confirmed.donate);
+}
+const { variant } = Astro.props as { variant: Variant };
+const pending = !(site.confirmed.sop && site.confirmed.donate);
+---
+
+<Base title="Fundraising" description={copy.fundraising.title} variant={variant} current="donate">
+  <section class="sec band-navy on-dark">
+    <div class="wrap split">
+      <div class="stack gap-m">
+        {pending && <p class="pending">Review build: this page goes live once Special Olympics Pakistan confirms in writing and the fundraiser exists (D2, D3).</p>}
+        <p class="eyebrow">Fundraising for the run</p>
+        <h1 class="h1 title">{copy.fundraising.title}</h1>
+        {site.donateUrl ? <a class="btn btn--primary self-start" href={site.donateUrl} rel="noopener">Donate</a> : <span class="btn btn--soon self-start">The fundraiser opens soon</span>}
+        <p class="small">Donations go through the fundraiser’s own page. This site never takes payments.</p>
+      </div>
+      <div class="ring">
+        <GoalRing tone="reversed" size={240} draw />
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap split">
+      <div class="stack gap-m">
+        <p class="eyebrow">The run it supports</p>
+        <h2 class="h2">Walk it. Wheel it. <span class="rasp">Run it.</span></h2>
+        <p class="lead">{copy.fiveK.launch}</p>
+        <a class="btn self-start" href={link(variant, 'the-5k')}>See the 5K</a>
+      </div>
+      <article class="card card--rasp">
+        <h2 class="h3">Steps that give back</h2>
+        <p>{copy.pillars[3].text}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec band-cream">
+    <div class="wrap stack gap-l">
+      <p class="eyebrow">Other ways to help</p>
+      <div class="grid">
+        <a class="card" href={link(variant, 'get-involved#volunteer')}><h3 class="h3">Volunteer</h3></a>
+        <a class="card" href={link(variant, 'get-involved#coach')}><h3 class="h3">Coach with us</h3><p>{copy.involved.roles.find((role) => role.id === 'coach')?.text}</p></a>
+        <a class="card" href={link(variant, 'get-involved#partner')}><h3 class="h3">Partner</h3></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .title {
+    max-width: 16ch;
+  }
+  .gap-m {
+    gap: 20px;
+  }
+  .gap-l {
+    gap: 28px;
+  }
+  .self-start {
+    align-self: flex-start;
+  }
+  .pending {
+    align-self: flex-start;
+    padding: 8px 12px;
+    border: 1px solid var(--note-line);
+    border-radius: 8px;
+    background: var(--note-bg);
+    color: var(--note-text);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .ring {
+    display: flex;
+    flex: 0 1 280px;
+    justify-content: center;
+  }
+</style>

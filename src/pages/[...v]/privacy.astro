@@ -1,0 +1,64 @@
+---
+// Written from what this build actually loads: self-hosted fonts, no
+// cookies, no analytics, no forms on the site. Update it whenever that changes.
+import Base from '../../layouts/Base.astro';
+import { variantPaths, type Variant } from '../../lib/variant';
+import { site } from '../../data/site';
+
+export function getStaticPaths() {
+  return variantPaths();
+}
+const { variant } = Astro.props as { variant: Variant };
+const filmHost = site.film ? new URL(site.film.embedUrl).hostname.replace(/^www\./, '') : null;
+---
+
+<Base title="Privacy" description="How the Soles with Goals website handles information about you." variant={variant}>
+  <section class="sec">
+    <div class="narrow stack gap-l">
+      <h1 class="h1">Privacy</h1>
+      <p class="lead">Here’s what this website does, and doesn’t do, with your information.</p>
+
+      <div class="stack">
+        <h2 class="h3">Who runs this site</h2>
+        <p>
+          Soles with Goals is a student-led project run by Amalia Jaffer.
+          {site.email ? <>You can write to us at <a href={`mailto:${site.email}`}>{site.email}</a>.</> : 'Our contact details are coming soon.'}
+        </p>
+      </div>
+      <div class="stack">
+        <h2 class="h3">What we collect</h2>
+        <p>Nothing on this site itself. When you sign up, the button takes you to a Google Form in Amalia’s account, and Google’s privacy policy covers what you enter there. If you’re under 18, the form asks a parent or guardian to agree first.</p>
+      </div>
+      <div class="stack">
+        <h2 class="h3">What the site loads</h2>
+        <ul class="list">
+          <li><strong>Hosting:</strong> like every website, ours is served by a web host that keeps standard logs, such as IP addresses and which pages were visited.</li>
+          <li><strong>Fonts:</strong> served from this site, not from anyone else.</li>
+          {filmHost && <li><strong>Video:</strong> the film plays from {filmHost}, which has its own privacy policy.</li>}
+          <li><strong>Analytics and cookies:</strong> none at all.</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <h2 class="h3">Photos and stories</h2>
+        <p>We only share photos and stories with written permission, from a parent or guardian for anyone under 18. If you’d like a photo or story taken down, just ask using the contact details above and we’ll remove it.</p>
+      </div>
+      <p class="small">Last updated 29 October 2026.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .gap-l {
+    gap: 28px;
+  }
+  .stack {
+    gap: 10px;
+  }
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding-left: 22px;
+  }
+</style>

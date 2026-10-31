@@ -1,0 +1,243 @@
+---
+// "Your goal, your way": pick how you'll move, type a goal, download a bib
+// in her one-pager's style. Made in the browser; nothing is sent or saved.
+---
+
+<div class="maker card" id="bib-maker">
+  <h3 class="h3">Make your bib</h3>
+  <fieldset class="modes">
+    <legend class="sr-only">How you’ll move</legend>
+    <label><input type="radio" name="bib-mode" value="WALK IT" checked /><span>Walk it</span></label>
+    <label><input type="radio" name="bib-mode" value="WHEEL IT" /><span>Wheel it</span></label>
+    <label><input type="radio" name="bib-mode" value="RUN IT" /><span>Run it</span></label>
+  </fieldset>
+  <label class="goal-label" for="bib-goal">My goal</label>
+  <input id="bib-goal" type="text" maxlength="40" value="the first mile" autocomplete="off" />
+  <div class="bib" aria-live="polite">
+    <div class="bib-top"><span>Soles with Goals</span><span>5K · Central Park</span></div>
+    <div class="bib-mode" data-mode>WALK IT</div>
+    <div class="bib-goal">My goal: <span data-goal>the first mile</span></div>
+  </div>
+  <button type="button" class="btn btn--primary" data-download>Download my bib</button>
+  <p class="small">It’s made in your browser. Nothing you type is sent or saved. #SolesWithGoals</p>
+</div>
+
+<script>
+  const root = document.getElementById('bib-maker');
+  if (root) {
+    const goalInput = root.querySelector<HTMLInputElement>('#bib-goal')!;
+    const modeOut = root.querySelector<HTMLElement>('[data-mode]')!;
+    const goalOut = root.querySelector<HTMLElement>('[data-goal]')!;
+    const current = () => ({
+      mode: root.querySelector<HTMLInputElement>('input[name="bib-mode"]:checked')?.value ?? 'WALK IT',
+      goal: goalInput.value.trim() || '…',
+    });
+    const update = () => {
+      const { mode, goal } = current();
+      if (modeOut.textContent !== mode) {
+        // Restart the stamp animation each time the mode changes.
+        modeOut.classList.remove('stamp');
+        void modeOut.offsetWidth;
+        modeOut.classList.add('stamp');
+      }
+      modeOut.textContent = mode;
+      goalOut.textContent = goal;
+    };
+    root.addEventListener('input', update);
+    root.addEventListener('change', update);
+
+    const rounded = (g: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) => {
+      g.beginPath();
+      g.moveTo(x + r, y);
+      g.arcTo(x + w, y, x + w, y + h, r);
+      g.arcTo(x + w, y + h, x, y + h, r);
+      g.arcTo(x, y + h, x, y, r);
+      g.arcTo(x, y, x + w, y, r);
+      g.closePath();
+    };
+    const fit = (g: CanvasRenderingContext2D, text: string, weight: string, size: number, max: number, family: string) => {
+      let px = size;
+      do {
+        g.font = `${weight} ${px}px ${family}`;
+        px -= 4;
+      } while (g.measureText(text).width > max && px > 20);
+    };
+    const ring = (g: CanvasRenderingContext2D, cx: number, cy: number, size: number) => {
+      const s = size / 40;
+      g.save();
+      g.translate(cx - 20 * s, cy - 20 * s);
+      g.scale(s, s);
+      g.lineWidth = 3.8;
+      g.lineCap = 'round';
+      g.strokeStyle = '#07195A';
+      g.stroke(new Path2D('M23.36 7.44A13 13 0 1 1 7 20'));
+      g.fillStyle = '#DC0F5E';
+      for (const [x, y, r] of [[8.03, 14.92, 1.3], [10.49, 11.13, 1.6], [14.1, 8.42, 1.9], [20, 7, 3.2]]) {
+        g.beginPath();
+        g.arc(x, y, r, 0, Math.PI * 2);
+        g.fill();
+      }
+      g.restore();
+    };
+
+    root.querySelector('[data-download]')?.addEventListener('click', async () => {
+      await document.fonts.ready;
+      const { mode, goal } = current();
+      const W = 1080;
+      const H = 1350;
+      const canvas = document.createElement('canvas');
+      canvas.width = W;
+      canvas.height = H;
+      const g = canvas.getContext('2d')!;
+      const display = '"Bricolage Grotesque Variable", sans-serif';
+      const body = '"Atkinson Hyperlegible", sans-serif';
+      g.fillStyle = '#FFF8F4';
+      g.fillRect(0, 0, W, H);
+      const x = 90, y = 140, w = 900, h = 1040, r = 48;
+      g.save();
+      rounded(g, x, y, w, h, r);
+      g.fillStyle = '#FFFFFF';
+      g.fill();
+      g.clip();
+      g.fillStyle = '#07195A';
+      g.fillRect(x, y, w, 160);
+      g.fillStyle = '#DC0F5E';
+      g.fillRect(x, y + h - 240, w, 240);
+      g.restore();
+      rounded(g, x, y, w, h, r);
+      g.lineWidth = 8;
+      g.strokeStyle = '#07195A';
+      g.stroke();
+      g.textBaseline = 'middle';
+      g.fillStyle = '#FFF8F4';
+      g.font = `800 46px ${display}`;
+      g.fillText('Soles with Goals', x + 48, y + 80);
+      g.textAlign = 'right';
+      g.font = `700 30px ${body}`;
+      g.fillText('5K · CENTRAL PARK', x + w - 48, y + 80);
+      ring(g, W / 2, y + 360, 210);
+      g.textAlign = 'center';
+      g.fillStyle = '#07195A';
+      fit(g, mode, '800', 150, w - 120, display);
+      g.fillText(mode, W / 2, y + 600);
+      g.textAlign = 'left';
+      g.fillStyle = '#FFFFFF';
+      g.font = `700 40px ${body}`;
+      g.fillText('My goal:', x + 48, y + h - 168);
+      fit(g, goal, '800', 64, w - 96, display);
+      g.fillText(goal, x + 48, y + h - 92);
+      g.textAlign = 'center';
+      g.fillStyle = '#07195A';
+      g.font = `700 36px ${body}`;
+      g.fillText('#SolesWithGoals', W / 2, H - 80);
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'my-soles-with-goals-bib.png';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      }, 'image/png');
+    });
+  }
+</script>
+
+<style>
+  .maker {
+    gap: 16px;
+  }
+  .modes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .modes label {
+    position: relative;
+  }
+  .modes input {
+    position: absolute;
+    opacity: 0;
+  }
+  .modes span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 20px;
+    border: 2px solid var(--navy);
+    border-radius: 999px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .modes input:checked + span {
+    border-color: var(--rasp);
+    background: var(--rasp);
+    color: var(--white);
+  }
+  .modes input:focus-visible + span {
+    outline: 3px solid var(--rasp-text);
+    outline-offset: 3px;
+  }
+  .goal-label {
+    font-size: 15px;
+    font-weight: 700;
+  }
+  #bib-goal {
+    min-height: 48px;
+    padding: 0 14px;
+    border: 2px solid var(--navy);
+    border-radius: 10px;
+    color: var(--navy);
+    font: 400 18px var(--font-body);
+  }
+  .bib {
+    overflow: hidden;
+    border: 2px solid var(--navy);
+    border-radius: 14px;
+    background: var(--white);
+  }
+  .bib-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--navy);
+    color: var(--cream);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .bib-mode {
+    padding: 22px 16px;
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5vw, 44px);
+    font-weight: 800;
+    text-align: center;
+  }
+  @keyframes stamp {
+    0% {
+      opacity: 0.2;
+      scale: 1.25;
+      rotate: -4deg;
+    }
+    60% {
+      opacity: 1;
+      scale: 0.96;
+      rotate: 1deg;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .bib-mode.stamp {
+      animation: stamp 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+  }
+  .bib-goal {
+    padding: 12px 16px;
+    background: var(--rasp);
+    color: var(--white);
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+</style>

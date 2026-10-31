@@ -1,0 +1,324 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import HeroPlain from '../../components/HeroPlain.astro';
+import HeroPhotos from '../../components/HeroPhotos.astro';
+import GoalRing from '../../components/GoalRing.astro';
+import Gate from '../../components/Gate.astro';
+import Laps from '../../components/Laps.astro';
+import stadium from '../../assets/photos/stadium.jpg';
+import { variantPaths, link, type Variant } from '../../lib/variant';
+import { countLabel } from '../../lib/count';
+import { copy } from '../../data/copy';
+import { site, showPending } from '../../data/site';
+
+export function getStaticPaths() {
+  return variantPaths();
+}
+const { variant } = Astro.props as { variant: Variant };
+const photos = variant === 'photos';
+const event = site.event;
+const forms = site.forms as Record<string, string | null>;
+// The fourth pillar is hidden on the live site until SOP confirms, so count what shows.
+const pillarCount = copy.pillars.filter((pillar) => !pillar.sop || showPending(site.confirmed.sop)).length;
+const pillarLabel = countLabel(pillarCount, 'pillars');
+// The vision ends on "that's mine." after its colon: that part gets the highlighter.
+const colon = copy.vision.lastIndexOf(': ');
+const visionStart = colon < 0 ? copy.vision : copy.vision.slice(0, colon + 2);
+const visionEnd = colon < 0 ? '' : copy.vision.slice(colon + 2);
+---
+
+<Base description={copy.heroLine} variant={variant}>
+  {photos ? <HeroPhotos variant={variant} /> : <HeroPlain variant={variant} />}
+
+  <section class="sec">
+    <div class="wrap stack" data-inview>
+      <p class="eyebrow">Vision</p>
+      <p class="statement">{visionStart}{visionEnd && <span class="mark">{visionEnd}</span>}</p>
+    </div>
+  </section>
+
+  <section class="sec sec--line">
+    <div class="wrap stack gap-l">
+      <h2 class="eyebrow">{pillarLabel}</h2>
+      <div class="grid">
+        {
+          copy.pillars.map((pillar) =>
+            pillar.sop ? (
+              <Gate confirmed={site.confirmed.sop} note="needs SOP’s written OK (D2)">
+                <article class={`card card--${pillar.tone}`}>
+                  <h3 class="h3">{pillar.title}</h3>
+                  <p>{pillar.text}</p>
+                </article>
+              </Gate>
+            ) : (
+              <article class={`card card--${pillar.tone}`}>
+                <h3 class="h3">{pillar.title}</h3>
+                <p>{pillar.text}</p>
+              </article>
+            )
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--line">
+    <div class="wrap split">
+      <div class="stack gap-m">
+        <p class="eyebrow">{copy.fiveK.eyebrow}</p>
+        <h2 class="h2">Walk it. Wheel it. <span class="rasp">Run it.</span></h2>
+        <p class="lead">{copy.fiveK.launch}</p>
+        {
+          event.date ? (
+            <p class="when">
+              <strong>{event.date}</strong>
+              {event.startTime && ` · ${event.startTime}`}
+            </p>
+          ) : (
+            <div class="soon">
+              <strong>Date coming soon</strong>
+              <span>We’ll share the date, start time and start point as soon as the park permit is confirmed.</span>
+            </div>
+          )
+        }
+        <div class="row">
+          <a class="btn btn--primary" href={link(variant, 'the-5k')}>See the 5K</a>
+          {event.registerUrl ? <a class="btn" href={event.registerUrl} rel="noopener">Register</a> : <span class="btn btn--soon">Registration opens soon</span>}
+        </div>
+      </div>
+      <div class="bib-art" aria-hidden="true">
+        <div class="bib">
+          <div class="bib-top"><span>Soles with Goals</span><span>5K · Central Park</span></div>
+          <div class="bib-ring"><GoalRing size={120} /></div>
+          <div class="bib-goal">My goal:<span class="line"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--line">
+    <div class="wrap split founder">
+      {
+        photos ? (
+          <figure class="founder-media">
+            <div class="photo-oval">
+              <Image src={stadium} widths={[340, 520, 680]} sizes="(max-width: 760px) 70vw, 340px" alt="Amalia racing on an outdoor track" />
+            </div>
+          </figure>
+        ) : (
+          <div class="founder-media ring-oval" aria-hidden="true">
+            <GoalRing size={200} />
+          </div>
+        )
+      }
+      <div class="stack gap-m">
+        <p class="eyebrow">Why I run</p>
+        <blockquote class="quote">
+          <p>“{copy.essay.quote}”</p>
+          <footer class="small">{copy.essay.byline}</footer>
+        </blockquote>
+        <a class="btn self-start" href={link(variant, 'about#story')}>Read Amalia’s story</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec band-cream">
+    <div class="wrap split">
+      <div class="stack gap-m">
+        <p class="eyebrow">In Karachi</p>
+        <h2 class="h2">{copy.programme.teaserTitle}</h2>
+        <p class="lead">{copy.programme.teaser}</p>
+        <div class="row">
+          <a class="btn btn--primary" href={link(variant, 'approach')}>Our approach</a>
+          <a class="btn" href={link(variant, 'impact')}>The modules</a>
+        </div>
+      </div>
+      <Laps />
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap stack gap-m">
+      <p class="eyebrow">Stories of Change</p>
+      <h2 class="h2">{copy.stories.title}</h2>
+      <p class="lead">{copy.stories.intro}</p>
+      <a class="btn self-start" href={link(variant, 'stories')}>Why we’re running</a>
+    </div>
+  </section>
+
+  <section class="sec sec--line">
+    <div class="wrap stack gap-l">
+      <p class="eyebrow">Get involved</p>
+      <h2 class="h2">{copy.involved.sub}</h2>
+      <div class="grid roles5">
+        {
+          copy.involved.roles.map((role) => (
+            <article class="card">
+              <h3 class="h3">{role.title}</h3>
+              {role.text && <p>{role.text}</p>}
+              <div class="push">
+                {forms[role.form] ? (
+                  <a class="btn btn--primary" href={forms[role.form]!} rel="noopener">
+                    Sign up<span class="sr-only"> (opens a Google Form)</span>
+                  </a>
+                ) : (
+                  <span class="btn btn--soon">Opening soon</span>
+                )}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+      <a class="btn self-start" href={link(variant, 'get-involved')}>All the ways to help</a>
+    </div>
+  </section>
+
+  <Gate confirmed={site.confirmed.donate && site.confirmed.sop} note="needs D2 + D3">
+    <section class="sec">
+      <div class="wrap stack gap-m">
+        <p class="eyebrow">Fundraising for the run</p>
+        <h2 class="h2">{copy.fundraising.title}</h2>
+        <a class="btn btn--primary self-start" href={link(variant, 'fundraising')}>Donate</a>
+      </div>
+    </section>
+  </Gate>
+
+  <section class="sec band-navy on-dark">
+    <div class="wrap updates">
+      <div class="stack gap-s">
+        <h2 class="h3">{copy.fundraising.updates}</h2>
+        <p class="small">Opens a Google Form in Amalia’s account.</p>
+      </div>
+      {site.forms.updates ? <a class="btn btn--primary" href={site.forms.updates} rel="noopener">Sign up</a> : <span class="btn btn--soon">Opening soon</span>}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .gap-s {
+    gap: 8px;
+  }
+  .gap-m {
+    gap: 20px;
+  }
+  .gap-l {
+    gap: 28px;
+  }
+  .self-start {
+    align-self: flex-start;
+  }
+  .card p {
+    font-size: 16px;
+  }
+  .push {
+    margin-top: auto;
+  }
+  /* Five roles: one row when wide, 3 + 2 in between, never a lone card. */
+  .roles5 {
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 560px) {
+    .roles5 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .roles5 > :last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 820px) {
+    .roles5 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .roles5 > :last-child:nth-child(odd) {
+      grid-column: auto;
+    }
+  }
+  @media (min-width: 1140px) {
+    .roles5 {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+  .when {
+    font-size: 20px;
+  }
+  .bib-art {
+    display: flex;
+    justify-content: center;
+    padding: 28px;
+    border-radius: var(--radius);
+    background: var(--aqua);
+  }
+  .bib {
+    width: min(420px, 100%);
+    overflow: hidden;
+    border: 2px solid var(--navy);
+    border-radius: 16px;
+    background: var(--white);
+  }
+  .bib-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 18px;
+    background: var(--navy);
+    color: var(--cream);
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .bib-ring {
+    display: flex;
+    justify-content: center;
+    padding: 28px;
+  }
+  .bib-goal {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 16px 18px;
+    background: var(--rasp);
+    color: var(--white);
+    font-weight: 700;
+  }
+  .line {
+    flex: 1;
+    margin-bottom: 5px;
+    border-bottom: 2px solid var(--white);
+  }
+  .founder {
+    align-items: flex-start;
+  }
+  .founder-media {
+    flex: 0 1 340px;
+    margin: 0;
+  }
+  .ring-oval {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 3 / 4;
+    border: 4px solid var(--aqua);
+    border-radius: 999px;
+    background: var(--cream);
+  }
+  .quote {
+    margin: 0;
+  }
+  .quote p {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 2.8vw, 38px);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .quote footer {
+    margin-top: 12px;
+  }
+  .updates {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+</style>

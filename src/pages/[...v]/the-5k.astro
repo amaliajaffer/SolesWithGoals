@@ -1,0 +1,209 @@
+---
+import Base from '../../layouts/Base.astro';
+import GoalRing from '../../components/GoalRing.astro';
+import Gate from '../../components/Gate.astro';
+import BibMaker from '../../components/BibMaker.astro';
+import { variantPaths, link, type Variant } from '../../lib/variant';
+import { copy } from '../../data/copy';
+import { site } from '../../data/site';
+
+export function getStaticPaths() {
+  return variantPaths();
+}
+const { variant } = Astro.props as { variant: Variant };
+const event = site.event;
+const details = [
+  { label: 'Date', value: event.date },
+  { label: 'Start time', value: event.startTime ? `${event.startTime} (New York time)` : null },
+  { label: 'Start and finish', value: event.startFinish },
+];
+---
+
+<Base title="The 5K" description={copy.fiveK.launch} variant={variant} current="5k">
+  <section class="banner">
+    <div class="wrap stack banner-in">
+      <p class="wordmark" aria-label="Soles with Goals">
+        <span aria-hidden="true">S<GoalRing tone="raspberry" size={40} draw class="o" />LES <em>with</em> G<GoalRing tone="raspberry" size={40} class="o" />ALS</span>
+      </p>
+      <p class="eyebrow">Introducing · {copy.fiveK.eyebrow}</p>
+      <h1 class="h1 lines">
+        <span>{copy.fiveK.title[0]}</span> <span>{copy.fiveK.title[1]}</span> <span class="navy">{copy.fiveK.title[2]}</span>
+      </h1>
+      <p class="lead">{copy.fiveK.launch}</p>
+      <dl class="facts" data-inview>
+        {
+          details.map((item) => (
+            <div class="fact step" style={`--i: ${details.indexOf(item)}`}>
+              <dt>{item.label}</dt>
+              <dd>{item.value ?? 'Coming soon'}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <div class="row">
+        {event.registerUrl ? <a class="btn" href={event.registerUrl} rel="noopener">Register</a> : <span class="btn btn--soon">Registration opens soon</span>}
+        <a class="btn btn--navy" href={link(variant, 'get-involved#volunteer')}>Volunteer</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap split top">
+      <div class="stack gap-m">
+        <h2 class="eyebrow">Who it’s for</h2>
+        <p class="pos">{copy.positioning}</p>
+        <p class="lead">
+          {copy.positioningUnlike}<Gate confirmed={site.confirmed.sop} note="needs SOP’s written OK (D2)" inline>{copy.positioningSop}</Gate>.
+        </p>
+      </div>
+      <div class="stack">
+        {
+          copy.pillars.slice(0, 2).map((pillar) => (
+            <article class={`card card--${pillar.tone}`}>
+              <h3 class="h3">{pillar.title}</h3>
+              <p>{pillar.text}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="sec band-cream">
+    <div class="wrap split">
+      <div class="stack gap-m">
+        <p class="eyebrow">Your goal, your way</p>
+        <h2 class="h2">{copy.fiveK.goalTitle}</h2>
+        <p class="lead">{copy.fiveK.goalText}</p>
+      </div>
+      <BibMaker />
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap stack gap-m">
+      <h2 class="eyebrow">The course</h2>
+      <div class="soon">
+        <strong>Course details coming soon</strong>
+        <span>Once the route is confirmed, you’ll find the course map, the surface, wheelchair access and a quiet spot right here.</span>
+      </div>
+    </div>
+  </section>
+
+  <Gate confirmed={site.confirmed.sop && site.confirmed.donate} note="needs D2 + D3">
+    <section class="sec band-navy on-dark">
+      <div class="wrap split">
+        <div class="stack gap-m">
+          <p class="eyebrow">Steps that give back</p>
+          <h2 class="h2">From Central Park to Pakistan.</h2>
+          <p class="lead">Every registration and every mile raises money for Special Olympics Pakistan athletes.</p>
+        </div>
+        <div class="stack gap-m">
+          <a class="btn btn--primary self-start" href={link(variant, 'fundraising')}>Donate to the run</a>
+        </div>
+      </div>
+    </section>
+  </Gate>
+</Base>
+
+<style>
+  .banner {
+    padding: 64px 0 72px;
+    background: var(--rasp);
+    color: var(--white);
+  }
+  .banner-in {
+    gap: 24px;
+  }
+  .banner .eyebrow {
+    color: var(--white);
+  }
+  .wordmark {
+    font-family: var(--font-display);
+    font-size: clamp(30px, 4vw, 52px);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+  .wordmark em {
+    font-family: var(--font-body);
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  .wordmark :global(.o) {
+    display: inline-block;
+    width: 0.78em;
+    height: 0.78em;
+    vertical-align: -0.02em;
+  }
+  .lines span {
+    display: inline-block;
+  }
+  .navy {
+    color: var(--navy);
+  }
+  @keyframes line-rise {
+    from {
+      opacity: 0;
+      translate: 0 24px;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .lines span {
+      animation: line-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    .lines span:nth-child(1) {
+      animation-delay: 0.25s;
+    }
+    .lines span:nth-child(2) {
+      animation-delay: 0.45s;
+    }
+    .lines span:nth-child(3) {
+      animation-delay: 0.65s;
+    }
+  }
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: 14px;
+    max-width: 900px;
+    margin: 0;
+  }
+  .fact {
+    padding: 14px 18px;
+    border: 2px dashed var(--navy);
+    border-radius: 14px;
+    background: var(--white);
+    color: var(--navy);
+  }
+  .fact dt {
+    font-weight: 700;
+  }
+  .fact dd {
+    margin: 0;
+    color: var(--navy-700);
+  }
+  .btn--navy {
+    border-color: var(--navy);
+    background: var(--navy);
+    color: var(--cream);
+  }
+  .btn--navy:hover {
+    color: var(--cream);
+  }
+  .top {
+    align-items: flex-start;
+  }
+  .pos {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 2.6vw, 34px);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .gap-m {
+    gap: 20px;
+  }
+  .self-start {
+    align-self: flex-start;
+  }
+</style>
