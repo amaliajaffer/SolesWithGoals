@@ -1,0 +1,67 @@
+---
+// Something that doesn't exist yet. The dotted border echoes the dotted arc of
+// her ring ("not here yet"). Never holds a button.
+import GoalRing from './GoalRing.astro';
+
+interface Props {
+  title: string;
+  text?: string | null;
+  class?: string;
+}
+const { title, text, class: className } = Astro.props;
+const withArt = Astro.slots.has('art');
+---
+
+<div class:list={['soon-card', { 'soon-card--art': withArt }, className]}>
+  <div class="soon-text">
+    <GoalRing size={48} />
+    <p class="h4">{title}</p>
+    {text && <p class="small">{text}</p>}
+  </div>
+  {withArt && <div class="soon-art"><slot name="art" /></div>}
+</div>
+
+<style>
+  .soon-card,
+  .soon-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-16);
+  }
+  .soon-card {
+    padding: var(--space-32);
+    border: 3px dotted var(--rasp-text);
+    border-radius: var(--radius);
+    background: var(--white);
+    color: var(--navy);
+  }
+  .h4 {
+    font-family: var(--font-display);
+  }
+  .h4,
+  .small {
+    max-width: 640px;
+  }
+  .small {
+    margin-top: calc(var(--space-8) * -1);
+  }
+  /* With art beside it (the finish tape): text left, art right; stacked on phones. */
+  .soon-card--art {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+    align-items: center;
+    gap: var(--space-24) var(--space-48);
+  }
+  .soon-art :global(.art) {
+    width: 100%;
+  }
+  @media (max-width: 720px) {
+    .soon-card--art {
+      grid-template-columns: 1fr;
+    }
+    .soon-art {
+      width: min(260px, 100%);
+    }
+  }
+</style>

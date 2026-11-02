@@ -1,11 +1,12 @@
 ---
 // The top of About "begins with video" (her intake). The documentary plays here
 // once site.film is set (clips after her December trip). Until then the photos
-// version shows her running clip and the plain version says the film is coming.
-import { Image } from 'astro:assets';
-import GoalRing from './GoalRing.astro';
+// version shows her running clip in a track oval and the plain version says
+// the film is coming.
+// Her media lives in /media (not imported), so a build without the photos
+// version never ships it; astro.config copies only files a page links to.
+import ComingSoon from './ComingSoon.astro';
 import PauseButton from './PauseButton.astro';
-import storyStill from '../assets/photos/story-still.jpg';
 import { site } from '../data/site';
 import type { Variant } from '../lib/variant';
 
@@ -16,49 +17,40 @@ const { variant } = Astro.props;
 const film = site.film;
 ---
 
-<section class="film" aria-label="Film">
-  <div class="wrap">
-    {
-      film ? (
-        <figure class="frame frame--video">
-          <iframe
-            src={film.embedUrl}
-            title={film.title}
-            loading="lazy"
-            allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-            allowfullscreen
-          />
-          {film.note && <figcaption class="small">{film.note}</figcaption>}
-        </figure>
-      ) : variant === 'photos' ? (
-        <figure class="frame frame--clip" id="story-clip">
-          <img class="clip-anim" src="/media/story-loop.webp" width="720" height="540" alt="" decoding="async" />
-          <Image class="clip-still" src={storyStill} widths={[480, 720]} sizes="(max-width: 760px) 92vw, 720px" loading="eager" alt="Amalia running through a park" />
-          <PauseButton target="story-clip" label="Pause the running clip" class="clip-pause" />
-        </figure>
-      ) : (
-        <div class="frame frame--soon">
-          <GoalRing tone="reversed" size={120} draw />
-          <div class="soon-text">
-            <p class="h3">Amalia’s film is coming in December</p>
-            <p>Clips from her documentary will play right here.</p>
-          </div>
-        </div>
-      )
-    }
-  </div>
-</section>
+{
+  film ? (
+    <figure class="frame frame--video">
+      <iframe
+        src={film.embedUrl}
+        title={film.title}
+        loading="lazy"
+        allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+        allowfullscreen
+      />
+      {film.note && <figcaption class="small">{film.note}</figcaption>}
+    </figure>
+  ) : variant === 'photos' ? (
+    <figure class="frame frame--clip" id="story-clip">
+      <picture>
+        <source media="(prefers-reduced-motion: reduce)" srcset="/media/story-still.jpg" />
+        <img class="clip-anim" src="/media/story-loop.webp" width="720" height="540" alt="" decoding="async" />
+      </picture>
+      <img class="clip-still" src="/media/story-still.jpg" width="720" height="540" decoding="async" loading="eager" alt="Amalia running through a park" />
+      <PauseButton target="story-clip" label="the opening clip" class="clip-pause" />
+    </figure>
+  ) : (
+    <ComingSoon title="Amalia’s film is coming in December" text="Clips from her documentary will play right here." />
+  )
+}
 
 <style>
-  .film {
-    padding-bottom: clamp(32px, 5vw, 56px);
-  }
   .frame {
     position: relative;
+    width: 100%;
     margin: 0;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 1312 / 420;
     overflow: hidden;
-    border-radius: 28px;
+    border-radius: var(--radius-pill);
     background: var(--navy);
   }
   .frame img,
@@ -70,50 +62,35 @@ const film = site.film;
     height: 100%;
     border: 0;
     object-fit: cover;
+    object-position: 50% 20%;
   }
   .frame :global(.clip-pause) {
     position: absolute;
-    bottom: 16px;
-    left: 16px;
+    bottom: var(--space-24);
+    left: 50%;
     z-index: 2;
+    translate: -50% 0;
   }
-  /* Her running clip is 720 px wide: shown at its own size so it stays sharp. */
+  /* Her clip is 720 px wide: shown at its own size so it stays sharp. */
   .frame--clip {
     max-width: 720px;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 14 / 9;
   }
   .frame--video {
+    aspect-ratio: 16 / 9;
     overflow: visible;
+    border-radius: var(--radius);
   }
   .frame--video iframe {
-    border-radius: 28px;
+    border-radius: var(--radius);
   }
   .frame--video figcaption {
     position: absolute;
     top: calc(100% + 10px);
   }
-  .frame--soon {
-    aspect-ratio: auto;
-    min-height: 260px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 24px 36px;
-    padding: 32px;
-    color: var(--cream);
-    text-align: left;
-  }
-  .soon-text {
-    max-width: 30ch;
-  }
-  .soon-text p + p {
-    margin-top: 8px;
-    color: var(--navy-100);
-  }
-  @media (max-width: 560px) {
-    .frame--soon {
-      text-align: center;
+  @media (max-width: 760px) {
+    .frame--clip {
+      max-width: none;
     }
   }
 </style>

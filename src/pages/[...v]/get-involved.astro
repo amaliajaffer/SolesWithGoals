@@ -1,114 +1,76 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Gate from '../../components/Gate.astro';
+import Bib from '../../components/Bib.astro';
+import ComingSoon from '../../components/ComingSoon.astro';
+import PageHead from '../../components/PageHead.astro';
 import { variantPaths, link, type Variant } from '../../lib/variant';
 import { copy } from '../../data/copy';
-import { site } from '../../data/site';
+import { wideOnPhone } from '../../lib/pairs';
+import { site, showPending } from '../../data/site';
 
 export function getStaticPaths() {
   return variantPaths();
 }
 const { variant } = Astro.props as { variant: Variant };
 const forms = site.forms as Record<string, string | null>;
+const donateReady = site.confirmed.donate && site.confirmed.sop;
+// Phones pair the short bibs; the Fundraise bib counts only while it shows.
+const bibCount = copy.involved.roles.length + (showPending(donateReady) ? 1 : 0);
+const wide = wideOnPhone([...copy.involved.roles, ...(showPending(donateReady) ? [{ text: null }] : [])]);
+// "Run with us" widens so the rows have no holes.
+const span = { three: bibCount % 3 === 2, two: bibCount % 2 === 1 };
 ---
 
 <Base title="Get involved" description={copy.involved.title} variant={variant} current="involved">
-  <section class="sec band-cream">
-    <div class="wrap stack gap-m">
-      <p class="eyebrow">Get involved · Contact</p>
-      <h1 class="h1 title">{copy.involved.title}</h1>
-      <p class="lead">{copy.involved.sub}</p>
-      {
-        site.email ? (
-          <p class="contact">
-            Write to us: <a href={`mailto:${site.email}`}>{site.email}</a>
-          </p>
-        ) : (
-          <div class="soon self-start">
-            <strong>Contact details coming soon</strong>
-          </div>
-        )
-      }
-      <p class="tags">
-        {site.socials.map((social) => <a href={social.url} rel="noopener">{social.label}</a>)}
-        <span>{site.hashtag}</span>
-      </p>
-    </div>
-  </section>
+  <PageHead title={copy.involved.title} lead={copy.involved.formNote} />
 
-  <section class="sec">
-    <div class="wrap grid roles">
+  <section class="sec" aria-label="Ways to help">
+    <div class="wrap bibs">
       {
-        copy.involved.roles.map((role) => (
-          <article class="card" id={role.id}>
-            <h2 class="h3">{role.title}</h2>
-            {role.text && <p>{role.text}</p>}
-            <div class="push">
-              {forms[role.form] ? (
-                <a class="btn btn--primary" href={forms[role.form]!} rel="noopener">
-                  Sign up<span class="sr-only"> (opens a Google Form)</span>
-                </a>
-              ) : (
-                <span class="btn btn--soon">Opening soon</span>
-              )}
-            </div>
-          </article>
+        copy.involved.roles.map((role, index) => (
+          <Bib id={role.id} title={role.title} text={role.text} href={forms[role.form]} run={role.id === 'run'} wide={wide[index]} span={role.id === 'run' ? span : undefined} />
         ))
       }
-      <Gate confirmed={site.confirmed.donate && site.confirmed.sop} note="needs D2 + D3">
-        <article class="card card--outline">
-          <h2 class="h3">Fundraise for the run</h2>
-          <p>{copy.fundraising.title}</p>
-          <div class="push">
-            <a class="btn btn--primary" href={link(variant, 'fundraising')}>Donate</a>
-          </div>
-        </article>
+      <Gate confirmed={donateReady} note="needs D2 + D3">
+        <Bib id="fundraise" title="Fundraise" href={site.donateUrl ? link(variant, 'fundraising') : null} label="Donate" />
       </Gate>
     </div>
   </section>
 
-  <section class="sec sec--line">
-    <div class="wrap">
-      <aside class="note">
-        <h2 class="eyebrow">Before you fill in a form</h2>
-        <p>Our sign-up forms are Google Forms in Amalia’s account. If you’re under 18, a parent or guardian needs to fill in or sign the consent part. Please leave out health details and anyone else’s personal details.</p>
-      </aside>
-    </div>
-  </section>
+  <Gate confirmed={donateReady} note="needs D2 + D3">
+    <section class="sec band-cream" aria-labelledby="fundraise-title">
+      <div class="wrap stack">
+        <h2 class="h2" id="fundraise-title">Fundraise for the run</h2>
+        {
+          site.donateUrl ? (
+            <a class="btn self-start" href={link(variant, 'fundraising')}>Donate</a>
+          ) : (
+            <ComingSoon title="The fundraiser opens soon" />
+          )
+        }
+      </div>
+    </section>
+  </Gate>
 </Base>
 
 <style>
-  .title {
-    max-width: 18ch;
+  .bibs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-24);
   }
-  .gap-m {
-    gap: 20px;
+  .bibs > :global(.gate) {
+    height: 100%;
   }
-  .self-start {
-    align-self: flex-start;
+  @media (max-width: 1023px) {
+    .bibs {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 20px;
-    font-weight: 700;
-  }
-  .roles {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-  }
-  .card {
-    scroll-margin-top: 24px;
-  }
-  .push {
-    margin-top: auto;
-  }
-  .note {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    max-width: 860px;
-    padding: 22px 24px;
-    border: 2px solid var(--navy);
-    border-radius: var(--radius);
+  @media (max-width: 720px) {
+    .bibs {
+      gap: var(--space-12);
+    }
   }
 </style>

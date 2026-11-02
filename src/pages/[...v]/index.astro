@@ -1,14 +1,15 @@
 ---
-import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
-import HeroPlain from '../../components/HeroPlain.astro';
-import HeroPhotos from '../../components/HeroPhotos.astro';
-import GoalRing from '../../components/GoalRing.astro';
+import Beats from '../../components/Beats.astro';
+import TrackMedia from '../../components/TrackMedia.astro';
 import Gate from '../../components/Gate.astro';
-import Laps from '../../components/Laps.astro';
-import stadium from '../../assets/photos/stadium.jpg';
+import Bib from '../../components/Bib.astro';
+import ComingSoon from '../../components/ComingSoon.astro';
+import Closing from '../../components/Closing.astro';
+import Art from '../../components/Art.astro';
 import { variantPaths, link, type Variant } from '../../lib/variant';
 import { countLabel } from '../../lib/count';
+import { wideOnPhone } from '../../lib/pairs';
 import { copy } from '../../data/copy';
 import { site, showPending } from '../../data/site';
 
@@ -17,308 +18,331 @@ export function getStaticPaths() {
 }
 const { variant } = Astro.props as { variant: Variant };
 const photos = variant === 'photos';
-const event = site.event;
 const forms = site.forms as Record<string, string | null>;
+const donateReady = site.confirmed.donate && site.confirmed.sop;
+// Phones pair the short bibs; the Fundraise bib counts only while it shows.
+const bibCount = copy.involved.roles.length + (showPending(donateReady) ? 1 : 0);
+const wide = wideOnPhone([...copy.involved.roles, ...(showPending(donateReady) ? [{ text: null }] : [])]);
+// "Run with us" widens so the rows have no holes.
+const span = { three: bibCount % 3 === 2, two: bibCount % 2 === 1 };
 // The fourth pillar is hidden on the live site until SOP confirms, so count what shows.
-const pillarCount = copy.pillars.filter((pillar) => !pillar.sop || showPending(site.confirmed.sop)).length;
-const pillarLabel = countLabel(pillarCount, 'pillars');
-// The vision ends on "that's mine." after its colon: that part gets the highlighter.
-const colon = copy.vision.lastIndexOf(': ');
-const visionStart = colon < 0 ? copy.vision : copy.vision.slice(0, colon + 2);
-const visionEnd = colon < 0 ? '' : copy.vision.slice(colon + 2);
+const pillarCount = copy.pillars.filter((pillar) => !pillar.sop || showPending(site.confirmed.sop && Boolean(site.event.date))).length;
+const [statement, ...rest] = copy.stories.who;
+// The fourth pillar names Central Park, so it also waits for the park permit (the event date).
+const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
 ---
 
-<Base description={copy.heroLine} variant={variant}>
-  {photos ? <HeroPhotos variant={variant} /> : <HeroPlain variant={variant} />}
-
-  <section class="sec">
-    <div class="wrap stack" data-inview>
-      <p class="eyebrow">Vision</p>
-      <p class="statement">{visionStart}{visionEnd && <span class="mark">{visionEnd}</span>}</p>
+<Base description={copy.introLine} variant={variant} ground="rasp">
+  <section class:list={['hero', 'band-rasp', { 'hero--poster': !photos }]} aria-labelledby="hero-title">
+    <Art name="hero-track" width={1200} height={520} eager class="hero-art" />
+    <div class="wrap hero-row">
+      <div class="hero-text stack">
+        <Beats id="hero-title" poster={!photos} />
+        <p class="lead hero-lead">{copy.essence} {copy.introLine}</p>
+        <div class="row">
+          <a class="btn btn--on-rasp" href={link(variant, 'get-involved')}>Get involved</a>
+          <a class="btn btn--outline-light" href={link(variant, 'the-5k')}>See the 5K</a>
+        </div>
+      </div>
+      {photos && <TrackMedia id="hero-clip" eager class="hero-media" />}
     </div>
   </section>
 
-  <section class="sec sec--line">
-    <div class="wrap stack gap-l">
-      <h2 class="eyebrow">{pillarLabel}</h2>
-      <div class="grid">
+  <section class="sec" aria-labelledby="who-title">
+    <div class="wrap stack">
+      <h2 class="h3" id="who-title">Who we’re running for</h2>
+      <div class="problem">
+        <p class="lead statement">{statement}</p>
+        <div class="stack-s">{rest.map((paragraph) => <p class="lead body">{paragraph}</p>)}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec band-cream" aria-labelledby="do-title">
+    <div class="wrap stack">
+      <div class="do-head">
+        <h2 class="h2" id="do-title">What we do</h2>
+        <Art name="soles-stride" width={360} height={300} class="do-art" />
+      </div>
+      <div class="features">
+        <article class="feature feature--navy band-navy">
+          <h3 class="h3">{copy.programme.teaserTitle}</h3>
+          <p class="body">{copy.programme.teaser}</p>
+          <a class="btn" href={link(variant, 'how-it-works')}>How it works</a>
+        </article>
+        <article class="feature">
+          <h3 class="h3">The Soles with Goals 5K</h3>
+          <p class="body">{copy.fiveK.launch}</p>
+          <a class="btn btn--outline" href={link(variant, 'the-5k')}>See the 5K</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="pillars-title">
+    <div class="wrap">
+      <h2 class="sr-only" id="pillars-title">{countLabel(pillarCount, 'pillars')}</h2>
+      <div class="pillars">
         {
-          copy.pillars.map((pillar) =>
-            pillar.sop ? (
-              <Gate confirmed={site.confirmed.sop} note="needs SOP’s written OK (D2)">
-                <article class={`card card--${pillar.tone}`}>
-                  <h3 class="h3">{pillar.title}</h3>
-                  <p>{pillar.text}</p>
-                </article>
+          copy.pillars.map((pillar) => {
+            const item = (
+              <div class="pillar">
+                <h3 class="h4">{pillar.title}</h3>
+                <p class="body">{pillar.text}</p>
+              </div>
+            );
+            return pillar.sop ? (
+              <Gate confirmed={sopAndVenue} note="needs SOP’s written OK (D2) and the park permit">
+                {item}
               </Gate>
             ) : (
-              <article class={`card card--${pillar.tone}`}>
-                <h3 class="h3">{pillar.title}</h3>
-                <p>{pillar.text}</p>
-              </article>
-            )
-          )
+              item
+            );
+          })
         }
       </div>
     </div>
   </section>
 
-  <section class="sec sec--line">
-    <div class="wrap split">
-      <div class="stack gap-m">
-        <p class="eyebrow">{copy.fiveK.eyebrow}</p>
-        <h2 class="h2">Walk it. Wheel it. <span class="rasp">Run it.</span></h2>
-        <p class="lead">{copy.fiveK.launch}</p>
+  <section class="sec band-cream" aria-labelledby="help-title">
+    <div class="wrap stack">
+      <h2 class="h2" id="help-title">{copy.involved.title}</h2>
+      <p class="body measure">{copy.involved.formNote}</p>
+      <div class="bibs">
         {
-          event.date ? (
-            <p class="when">
-              <strong>{event.date}</strong>
-              {event.startTime && ` · ${event.startTime}`}
-            </p>
-          ) : (
-            <div class="soon">
-              <strong>Date coming soon</strong>
-              <span>We’ll share the date, start time and start point as soon as the park permit is confirmed.</span>
-            </div>
-          )
-        }
-        <div class="row">
-          <a class="btn btn--primary" href={link(variant, 'the-5k')}>See the 5K</a>
-          {event.registerUrl ? <a class="btn" href={event.registerUrl} rel="noopener">Register</a> : <span class="btn btn--soon">Registration opens soon</span>}
-        </div>
-      </div>
-      <div class="bib-art" aria-hidden="true">
-        <div class="bib">
-          <div class="bib-top"><span>Soles with Goals</span><span>5K · Central Park</span></div>
-          <div class="bib-ring"><GoalRing size={120} /></div>
-          <div class="bib-goal">My goal:<span class="line"></span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec sec--line">
-    <div class="wrap split founder">
-      {
-        photos ? (
-          <figure class="founder-media">
-            <div class="photo-oval">
-              <Image src={stadium} widths={[340, 520, 680]} sizes="(max-width: 760px) 70vw, 340px" alt="Amalia racing on an outdoor track" />
-            </div>
-          </figure>
-        ) : (
-          <div class="founder-media ring-oval" aria-hidden="true">
-            <GoalRing size={200} />
-          </div>
-        )
-      }
-      <div class="stack gap-m">
-        <p class="eyebrow">Why I run</p>
-        <blockquote class="quote">
-          <p>“{copy.essay.quote}”</p>
-          <footer class="small">{copy.essay.byline}</footer>
-        </blockquote>
-        <a class="btn self-start" href={link(variant, 'about#story')}>Read Amalia’s story</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec band-cream">
-    <div class="wrap split">
-      <div class="stack gap-m">
-        <p class="eyebrow">In Karachi</p>
-        <h2 class="h2">{copy.programme.teaserTitle}</h2>
-        <p class="lead">{copy.programme.teaser}</p>
-        <div class="row">
-          <a class="btn btn--primary" href={link(variant, 'approach')}>Our approach</a>
-          <a class="btn" href={link(variant, 'impact')}>The modules</a>
-        </div>
-      </div>
-      <Laps />
-    </div>
-  </section>
-
-  <section class="sec">
-    <div class="wrap stack gap-m">
-      <p class="eyebrow">Stories of Change</p>
-      <h2 class="h2">{copy.stories.title}</h2>
-      <p class="lead">{copy.stories.intro}</p>
-      <a class="btn self-start" href={link(variant, 'stories')}>Why we’re running</a>
-    </div>
-  </section>
-
-  <section class="sec sec--line">
-    <div class="wrap stack gap-l">
-      <p class="eyebrow">Get involved</p>
-      <h2 class="h2">{copy.involved.sub}</h2>
-      <div class="grid roles5">
-        {
-          copy.involved.roles.map((role) => (
-            <article class="card">
-              <h3 class="h3">{role.title}</h3>
-              {role.text && <p>{role.text}</p>}
-              <div class="push">
-                {forms[role.form] ? (
-                  <a class="btn btn--primary" href={forms[role.form]!} rel="noopener">
-                    Sign up<span class="sr-only"> (opens a Google Form)</span>
-                  </a>
-                ) : (
-                  <span class="btn btn--soon">Opening soon</span>
-                )}
-              </div>
-            </article>
+          copy.involved.roles.map((role, index) => (
+            <Bib title={role.title} text={role.text} href={forms[role.form]} run={role.id === 'run'} wide={wide[index]} span={role.id === 'run' ? span : undefined} />
           ))
         }
+        <Gate confirmed={donateReady} note="needs D2 + D3">
+          <Bib title="Fundraise" href={site.donateUrl ? link(variant, 'fundraising') : null} label="Donate" />
+        </Gate>
       </div>
-      <a class="btn self-start" href={link(variant, 'get-involved')}>All the ways to help</a>
     </div>
   </section>
 
-  <Gate confirmed={site.confirmed.donate && site.confirmed.sop} note="needs D2 + D3">
-    <section class="sec">
-      <div class="wrap stack gap-m">
-        <p class="eyebrow">Fundraising for the run</p>
-        <h2 class="h2">{copy.fundraising.title}</h2>
-        <a class="btn btn--primary self-start" href={link(variant, 'fundraising')}>Donate</a>
+  <section class="sec" aria-labelledby="why-title">
+    <div class="wrap stack">
+      <div class="story">
+        {
+          photos && (
+            <figure class="story-media">
+              <img src="/media/stadium.jpg" width="640" height="957" loading="lazy" decoding="async" alt="Amalia racing on an outdoor track" />
+            </figure>
+          )
+        }
+        <div class:list={['stack-m', 'story-text', { 'story-text--full': !photos }]}>
+          <h2 class="eyebrow" id="why-title">Why I run</h2>
+          <blockquote class="stack-m">
+            <p class="quote">{copy.essay.quote}</p>
+            <footer class="small">{copy.essay.byline}</footer>
+          </blockquote>
+          <a class="btn btn--outline self-start" href={link(variant, 'stories#why-i-run')}>Read “Why I run”</a>
+        </div>
       </div>
-    </section>
-  </Gate>
-
-  <section class="sec band-navy on-dark">
-    <div class="wrap updates">
-      <div class="stack gap-s">
-        <h2 class="h3">{copy.fundraising.updates}</h2>
-        <p class="small">Opens a Google Form in Amalia’s account.</p>
-      </div>
-      {site.forms.updates ? <a class="btn btn--primary" href={site.forms.updates} rel="noopener">Sign up</a> : <span class="btn btn--soon">Opening soon</span>}
+      <ComingSoon title={copy.stories.title} />
     </div>
   </section>
+
+  <Closing title={copy.startLine}>
+    <a class="btn btn--on-rasp" href={link(variant, 'get-involved')}>Get involved</a>
+    <a class="btn btn--outline-light" href={link(variant, 'contact')}>Contact</a>
+  </Closing>
 </Base>
 
 <style>
-  .gap-s {
-    gap: 8px;
-  }
-  .gap-m {
-    gap: 20px;
-  }
-  .gap-l {
-    gap: 28px;
-  }
-  .self-start {
-    align-self: flex-start;
-  }
-  .card p {
-    font-size: 16px;
-  }
-  .push {
-    margin-top: auto;
-  }
-  /* Five roles: one row when wide, 3 + 2 in between, never a lone card. */
-  .roles5 {
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 560px) {
-    .roles5 {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .roles5 > :last-child:nth-child(odd) {
-      grid-column: 1 / -1;
-    }
-  }
-  @media (min-width: 820px) {
-    .roles5 {
-      grid-template-columns: repeat(3, 1fr);
-    }
-    .roles5 > :last-child:nth-child(odd) {
-      grid-column: auto;
-    }
-  }
-  @media (min-width: 1140px) {
-    .roles5 {
-      grid-template-columns: repeat(5, 1fr);
-    }
-  }
-  .when {
-    font-size: 20px;
-  }
-  .bib-art {
-    display: flex;
-    justify-content: center;
-    padding: 28px;
-    border-radius: var(--radius);
-    background: var(--aqua);
-  }
-  .bib {
-    width: min(420px, 100%);
+  .hero {
+    position: relative;
     overflow: hidden;
-    border: 2px solid var(--navy);
-    border-radius: 16px;
+  }
+  /* Track lanes from her brand set, in the band's empty bottom-right corner. */
+  .hero :global(.hero-art) {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: min(760px, 54vw);
+  }
+  .hero-row {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--space-64);
+    padding-top: var(--space-64);
+    padding-bottom: var(--space-64);
+  }
+  .hero-text {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .hero-lead {
+    max-width: 620px;
+  }
+  .hero :global(.hero-media) {
+    flex: 0 0 min(560px, 42%);
+    aspect-ratio: 14 / 9;
+  }
+  .statement {
+    font-weight: 700;
+  }
+  .problem {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-64);
+  }
+  .features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-32);
+  }
+  .feature {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-16);
+    padding: clamp(24px, 3.34vw, 48px);
+    border: 1px solid var(--navy-100);
+    border-radius: var(--radius);
     background: var(--white);
   }
-  .bib-top {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 12px 18px;
+  .feature--navy {
+    border-color: var(--navy);
     background: var(--navy);
-    color: var(--cream);
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
   }
-  .bib-ring {
+  .feature .btn {
+    margin-top: auto;
+  }
+  .feature .body {
+    margin-bottom: var(--space-8);
+  }
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-48) var(--space-32);
+  }
+  .pillar {
     display: flex;
-    justify-content: center;
-    padding: 28px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-12);
+    max-width: 400px;
   }
-  .bib-goal {
+  .bibs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-24);
+  }
+  .bibs > :global(.gate) {
+    height: 100%;
+  }
+  .story {
+    display: flex;
+    align-items: center;
+    gap: var(--space-64);
+  }
+  .story-media {
+    position: relative;
+    display: grid;
+    flex: 0 0 min(480px, 40%);
+    place-items: center;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: var(--radius-pill);
+    background: var(--aqua);
+  }
+  .story-media :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .story-text {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 860px;
+  }
+  /* Without her photo the quote runs the full width as a pull line. */
+  .story-text--full {
+    max-width: none;
+  }
+  .story-text--full .quote {
+    font-size: var(--display-l);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+  }
+  /* Without her clip the launch post fills the band at poster size. */
+  .hero--poster .hero-row {
+    padding-top: var(--space-48);
+    padding-bottom: var(--space-128);
+  }
+  .do-head {
     display: flex;
     align-items: flex-end;
-    gap: 10px;
-    padding: 16px 18px;
-    background: var(--rasp);
-    color: var(--white);
-    font-weight: 700;
-  }
-  .line {
-    flex: 1;
-    margin-bottom: 5px;
-    border-bottom: 2px solid var(--white);
-  }
-  .founder {
-    align-items: flex-start;
-  }
-  .founder-media {
-    flex: 0 1 340px;
-    margin: 0;
-  }
-  .ring-oval {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    aspect-ratio: 3 / 4;
-    border: 4px solid var(--aqua);
-    border-radius: 999px;
-    background: var(--cream);
-  }
-  .quote {
-    margin: 0;
-  }
-  .quote p {
-    font-family: var(--font-display);
-    font-size: clamp(26px, 2.8vw, 38px);
-    font-weight: 600;
-    line-height: 1.3;
-  }
-  .quote footer {
-    margin-top: 12px;
-  }
-  .updates {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
     justify-content: space-between;
-    gap: 20px;
+    gap: var(--space-32);
+  }
+  .do-head :global(.do-art) {
+    width: clamp(160px, 16vw, 240px);
+    margin-bottom: calc(var(--space-32) * -1);
+  }
+  .hero--poster .hero-lead {
+    max-width: 640px;
+  }
+  @media (max-width: 1023px) {
+    .bibs {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .pillars {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 860px) {
+    /* Phones: the lanes sit under the buttons, at the full width of the band. */
+    .hero :global(.hero-art) {
+      width: 100%;
+    }
+    .hero--poster .hero-row {
+      padding-bottom: calc(43vw + var(--space-16));
+    }
+    .hero-row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-32);
+      padding-top: var(--space-32);
+      padding-bottom: var(--space-48);
+    }
+    .hero :global(.hero-media) {
+      flex: none;
+      width: 100%;
+    }
+    .story {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-24);
+    }
+    .story-media {
+      flex: none;
+      width: 100%;
+    }
+  }
+  @media (max-width: 720px) {
+    .do-head :global(.do-art) {
+      display: none;
+    }
+    .problem,
+    .features,
+    .pillars {
+      grid-template-columns: 1fr;
+    }
+    .bibs {
+      gap: var(--space-12);
+    }
+    .problem {
+      gap: var(--space-16);
+    }
+    .pillars {
+      gap: var(--space-32);
+    }
   }
 </style>

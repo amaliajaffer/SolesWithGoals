@@ -1,0 +1,61 @@
+---
+// Her running clip in a running-track oval (or a portrait frame): her own
+// slowed-down loop over its still, with a Pause button. Paused or reduced
+// motion shows the still. Used only in the version with her photos.
+// Her media lives in /media (not imported), so a build without the photos
+// version never ships it; astro.config copies only files a page links to.
+import PauseButton from './PauseButton.astro';
+
+interface Props {
+  id: string;
+  shape?: 'oval' | 'portrait';
+  eager?: boolean;
+  class?: string;
+}
+const { id, shape = 'oval', eager = false, class: className } = Astro.props;
+---
+
+<figure class:list={['media', `media--${shape}`, className]} id={id}>
+        <picture>
+          <source media="(prefers-reduced-motion: reduce)" srcset="/media/run-still.jpg" />
+          <img class="clip-anim" src="/media/run-loop.webp" width="540" height="720" alt="" decoding="async" loading={eager ? 'eager' : 'lazy'} fetchpriority="low" />
+        </picture>
+        <img class="clip-still" src="/media/run-still.jpg" width="540" height="720" decoding="async" loading={eager ? 'eager' : 'lazy'} alt="Amalia running along a park trail" />
+        <PauseButton target={id} label="the running clip" class="media-pause" />
+</figure>
+
+<style>
+  .media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    overflow: hidden;
+    background: var(--navy);
+  }
+  .media--oval {
+    aspect-ratio: 14 / 9;
+    border-radius: var(--radius-pill);
+  }
+  .media--portrait {
+    aspect-ratio: 21 / 26;
+    border-radius: var(--radius);
+  }
+  .media img,
+  .media :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 35%;
+  }
+  .media :global(.media-pause) {
+    position: absolute;
+    bottom: var(--space-24);
+    left: 50%;
+    z-index: 2;
+    translate: -50% 0;
+  }
+</style>

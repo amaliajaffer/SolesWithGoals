@@ -1,39 +1,55 @@
 ---
 import Base from '../layouts/Base.astro';
-import GoalRing from '../components/GoalRing.astro';
+import Art from '../components/Art.astro';
+import { site } from '../data/site';
+import { PHOTOS_PREFIX } from '../lib/variant';
 ---
 
 <Base title="Page not found" description="We couldn’t find that page." variant="plain">
   <section class="sec">
     <div class="wrap nf">
-      <GoalRing size={220} draw />
-      <div class="stack gap-m">
-        <p class="eyebrow">404</p>
-        <h1 class="h1">Page not found</h1>
-        <p class="lead">We couldn’t find that page. It may have moved, or the link might have a typo.</p>
-        <div class="row">
-          <a class="btn btn--primary" href="/">Back to home</a>
-          <a class="btn" href="/the-5k/">See the 5K</a>
+      <div class="stack">
+        <h1 class="display-l">Page not found</h1>
+        <p class="lead body measure">We couldn’t find that page. It may have moved, or the link might have a typo.</p>
+        <div class="row" data-variant-links>
+          <a class="btn" href="/">Back to home</a>
+          <a class="btn btn--outline" href="/the-5k/">See the 5K</a>
         </div>
       </div>
+      <Art name="soles-stride" width={360} height={300} class="nf-art" />
     </div>
   </section>
+  {
+    site.review && (
+      <script is:inline define:vars={{ prefix: `/${PHOTOS_PREFIX}` }}>
+        // Review build only: a missing page under the photos version links back into it.
+        if (location.pathname.startsWith(prefix + '/')) {
+          document.querySelectorAll('[data-variant-links] a').forEach((a) => {
+            a.setAttribute('href', prefix + a.getAttribute('href'));
+          });
+        }
+      </script>
+    )
+  }
 </Base>
 
 <style>
   .nf {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
     align-items: center;
-    gap: 48px 64px;
-    padding-top: 40px;
-    padding-bottom: 40px;
+    gap: var(--space-48) var(--space-64);
   }
-  .nf > .stack {
-    flex: 1 1 380px;
-    min-width: 0;
+  .nf :global(.nf-art) {
+    width: 100%;
   }
-  .gap-m {
-    gap: 18px;
+  @media (max-width: 720px) {
+    .nf {
+      grid-template-columns: 1fr;
+    }
+    .nf :global(.nf-art) {
+      order: -1;
+      width: min(220px, 60%);
+    }
   }
 </style>

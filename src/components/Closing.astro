@@ -1,0 +1,14 @@
+---
+// The raspberry band that closes a page: one big line and its buttons.
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<section class="closing band-rasp sec">
+  <div class="wrap stack">
+    <h2 class="display-l">{title}</h2>
+    <div class="row"><slot /></div>
+  </div>
+</section>

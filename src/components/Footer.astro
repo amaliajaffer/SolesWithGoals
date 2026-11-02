@@ -1,128 +1,134 @@
 ---
-import Logo from './Logo.astro';
+import GoalRing from './GoalRing.astro';
 import { link, type Variant } from '../lib/variant';
-import { site } from '../data/site';
-import { copy } from '../data/copy';
+import { site, showPending } from '../data/site';
 
 interface Props {
   variant: Variant;
 }
 const { variant } = Astro.props;
-const explore = [
-  { label: 'About', path: 'about' },
-  { label: 'The 5K', path: 'the-5k' },
-  { label: 'Our Approach', path: 'approach' },
-  { label: 'Impact', path: 'impact' },
-  { label: 'Stories', path: 'stories' },
-  ...(site.film ? [{ label: 'Film', path: 'film' }] : []),
+const donateReady = site.confirmed.donate && site.confirmed.sop;
+type Item = { label: string; path: string; gate?: boolean };
+const columns: Item[][] = [
+  [
+    { label: 'About', path: 'about' },
+    { label: 'How it works', path: 'how-it-works' },
+    { label: 'The 5K', path: 'the-5k' },
+    { label: 'Stories', path: 'stories' },
+  ],
+  [
+    { label: 'Get involved', path: 'get-involved' },
+    ...(showPending(donateReady) ? [{ label: 'Fundraising', path: 'fundraising', gate: !donateReady }] : []),
+    { label: 'Contact', path: 'contact' },
+    { label: 'Privacy', path: 'privacy' },
+  ],
 ];
 ---
 
-<footer class="footer band-navy on-dark">
-  <div class="wrap top">
-    <div class="brand stack">
-      <Logo dark size={44} />
-      <p class="essence">{copy.essence}</p>
-      <p class="tag">{site.hashtag}</p>
+<footer class="footer band-navy">
+  <div class="wrap inner">
+    <div class="cols">
+      <div class="brand">
+        <GoalRing tone="reversed" size={56} label="Soles with Goals" />
+        <p class="tag">{site.hashtag}</p>
+        {site.socials.length > 0 && (
+          <ul class="socials">
+            {site.socials.map((social) => <li><a href={social.url} rel="noopener">{social.label}</a></li>)}
+          </ul>
+        )}
+      </div>
+      <nav class="links" aria-label="Footer">
+        {
+          columns.map((column) => (
+            <ul>
+              {column.map((item) => (
+                <li>
+                  <a class:list={{ gate: item.gate }} data-note={item.gate ? 'needs D2 + D3' : undefined} href={link(variant, item.path)}>
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ))
+        }
+      </nav>
     </div>
-    <nav class="cols" aria-label="Footer">
-      <div>
-        <h2 class="label">Explore</h2>
-        <ul>{explore.map((item) => <li><a href={link(variant, item.path)}>{item.label}</a></li>)}</ul>
-      </div>
-      <div>
-        <h2 class="label">Get involved</h2>
-        <ul>
-          {copy.involved.roles.map((role) => <li><a href={link(variant, `get-involved#${role.id}`)}>{role.title}</a></li>)}
-        </ul>
-      </div>
-      <div>
-        <h2 class="label">Contact</h2>
-        <ul>
-          {site.email ? <li><a href={`mailto:${site.email}`}>{site.email}</a></li> : <li class="soon-text">Contact details coming soon</li>}
-          {site.socials.map((social) => <li><a href={social.url} rel="noopener">{social.label}</a></li>)}
-        </ul>
-      </div>
-    </nav>
-  </div>
-  <div class="wrap bottom">
-    {!site.confirmed.sop && <p>We’re a student-led community, and we’re not affiliated with Special Olympics.</p>}
-    <p>© 2026 Soles with Goals · <a href={link(variant, 'privacy')}>Privacy</a></p>
+    {!site.confirmed.sop && <p class="fine">We’re a student-led community, and we’re not affiliated with Special Olympics.</p>}
+    <p class="fine">© 2026 Soles with Goals</p>
   </div>
 </footer>
 
 <style>
   .footer {
-    padding: 56px 0 32px;
+    padding: var(--space-64) 0;
   }
-  .top {
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+  }
+  .cols {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 32px 56px;
+    gap: var(--space-24) var(--space-96);
   }
   .brand {
-    flex: 1 1 260px;
-    gap: 14px;
-  }
-  .essence {
-    font-family: var(--font-display);
-    font-size: 22px;
-    font-weight: 800;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
   }
   .tag {
     color: var(--aqua);
     font-size: 15px;
-  }
-  .cols {
-    display: flex;
-    flex: 2 1 520px;
-    flex-wrap: wrap;
-    gap: 28px 56px;
-  }
-  .label {
-    margin-bottom: 10px;
-    color: var(--aqua);
-    font-family: var(--font-body);
-    font-size: 13px;
     font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-24) var(--space-96);
   }
   ul {
     display: flex;
     flex-direction: column;
-    gap: 6px;
     margin: 0;
     padding: 0;
     list-style: none;
   }
   li a {
-    display: inline-block;
-    padding: 4px 0;
-    color: var(--cream);
-    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--white);
+    font-size: 18px;
+    line-height: 1.6;
     text-decoration: none;
   }
   li a:hover {
     color: var(--aqua);
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
-  .soon-text {
-    color: var(--navy-100);
+  /* Review build: the note sits beside the link so it doesn't cover the one above. */
+  li .gate::before {
+    top: 50%;
+    right: auto;
+    left: calc(100% + 12px);
+    translate: 0 -50%;
+  }
+  .socials a {
     font-size: 15px;
   }
-  .bottom {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 12px 24px;
-    margin-top: 36px;
-    padding-top: 20px;
-    border-top: 1px solid var(--navy-700);
+  .fine {
     color: var(--navy-100);
-    font-size: 14px;
+    font-size: 15px;
+    line-height: 1.5;
   }
-  .bottom a {
-    color: var(--cream);
+  @media (max-width: 640px) {
+    .cols,
+    .links {
+      flex-direction: column;
+    }
   }
 </style>

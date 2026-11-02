@@ -1,0 +1,76 @@
+---
+// "Walk it. / Wheel it. / Run it." from her launch post. The first line is
+// still (it paints first); the other two rise out of a mask one after another
+// like strides. The text is always in the page; under reduced motion nothing moves.
+import { copy } from '../data/copy';
+
+interface Props {
+  as?: 'h1' | 'h2';
+  spaced?: boolean;
+  still?: boolean;
+  poster?: boolean;
+  id?: string;
+}
+// still: no rise (the moving version belongs to Home's hero only).
+// poster: the three lines run across the band at poster size, stepping right.
+const { as: Tag = 'h1', spaced = false, still = false, poster = false, id } = Astro.props;
+const [walk, wheel, run] = copy.fiveK.title;
+---
+
+<Tag class:list={['beats', 'display-xl', { 'beats--spaced': spaced, 'beats--still': still, 'beats--poster': poster }]} id={id}>
+  <span class="beat">{walk}</span>
+  <span class="beat mask"><span class="rise" style="--d: 0ms">{wheel}</span></span>
+  <span class="beat mask navy"><span class="rise" style="--d: 90ms">{run}</span></span>
+</Tag>
+
+<style>
+  .beats {
+    display: flex;
+    flex-direction: column;
+    color: var(--white);
+  }
+  .beats--spaced {
+    gap: var(--space-24);
+  }
+  .beat {
+    display: block;
+  }
+  /* Room for the letters inside the mask, given back underneath. */
+  .mask {
+    overflow: hidden;
+    padding-block: 0.06em 0.1em;
+    margin-block: -0.06em -0.1em;
+  }
+  .rise {
+    display: block;
+  }
+  .navy {
+    color: var(--navy);
+  }
+  /* Sized by width, and by height too so a short landscape phone still shows
+     all three lines with the buttons. */
+  .beats--poster {
+    font-size: clamp(56px, min(12.5vw, 20vh), 180px);
+    line-height: 0.9;
+  }
+  .beats--poster .beat:nth-child(2) {
+    padding-inline-start: 18%;
+  }
+  .beats--poster .beat:nth-child(3) {
+    text-align: end;
+  }
+  @keyframes beat-rise {
+    from {
+      transform: translateY(110%);
+    }
+    to {
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .beats:not(.beats--still) .rise {
+      animation: beat-rise 500ms cubic-bezier(0.05, 0.7, 0.1, 1) both;
+      animation-delay: calc(120ms + var(--d));
+    }
+  }
+</style>

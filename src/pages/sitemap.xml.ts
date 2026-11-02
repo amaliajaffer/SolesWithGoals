@@ -7,13 +7,15 @@ import { site as settings } from '../data/site';
 type Paths = () => { params: { v?: string } }[];
 // The brackets in the folder name are escaped so the glob reads them literally.
 const pages = import.meta.glob<Paths>('./\\[...v\\]/*.astro', { eager: true, import: 'getStaticPaths' });
+// Pages that moved into How it works only forward visitors, so they stay out.
+const moved = new Set(['approach', 'impact']);
 
 export const GET: APIRoute = ({ site }) => {
   const urls =
     settings.review || !site
       ? []
       : Object.entries(pages)
-          .filter(([, getPaths]) => typeof getPaths === 'function')
+          .filter(([file, getPaths]) => typeof getPaths === 'function' && !moved.has(file.slice(file.lastIndexOf('/') + 1, -'.astro'.length)))
           .flatMap(([file, getPaths]) => {
             const name = file.slice(file.lastIndexOf('/') + 1, -'.astro'.length);
             return getPaths().map(({ params }) => {

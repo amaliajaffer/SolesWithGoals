@@ -1,0 +1,271 @@
+---
+// Our approach and the modules on one page, with anchors at the top.
+// /approach and /impact point here.
+import Base from '../../layouts/Base.astro';
+import Gate from '../../components/Gate.astro';
+import ComingSoon from '../../components/ComingSoon.astro';
+import PageHead from '../../components/PageHead.astro';
+import SubTabs from '../../components/SubTabs.astro';
+import { variantPaths, type Variant } from '../../lib/variant';
+import { countLabel } from '../../lib/count';
+import { copy } from '../../data/copy';
+import { site, showPending } from '../../data/site';
+
+export function getStaticPaths() {
+  return variantPaths();
+}
+const { variant } = Astro.props as { variant: Variant };
+const p = copy.programme;
+const i = copy.impact;
+const first = i.modules[0];
+// "Rooted in Pakistan" is hidden on the live site until SOP confirms, so count what shows.
+const principlesLabel = countLabel(p.principles.filter((principle) => !principle.sop || showPending(site.confirmed.sop)).length, 'principles');
+// Only resources that exist or have a date to show.
+const resources = i.resources.filter((resource) => resource.file || resource.status);
+const anyFile = i.resources.some((resource) => resource.file);
+const tabs = [
+  { id: 'approach', label: 'Our approach' },
+  { id: 'sessions', label: 'Sessions' },
+  { id: 'modules', label: 'Modules' },
+  { id: 'resources', label: 'Resources' },
+];
+---
+
+<Base title="How it works" description={p.whoFor} variant={variant} current="how">
+  <PageHead title={p.title} lead={p.vision} flush />
+  <SubTabs items={tabs} />
+
+  <section id="approach" class="sec target" aria-labelledby="approach-title">
+    <div class="wrap stack">
+      <h2 class="h2" id="approach-title">{principlesLabel}</h2>
+      <ul class="principles">
+        {
+          p.principles.map((principle) => {
+            // A principle waiting for SOP's written OK: outlined in the review build, left out live.
+            const pending = Boolean(principle.sop) && !site.confirmed.sop;
+            if (pending && !site.review) return null;
+            return (
+              <li
+                class:list={['principle', { gate: pending }]}
+                data-note={pending ? 'partnership claim: needs SOP’s written OK (D2)' : undefined}
+              >
+                <h3 class="h4">{principle.title}</h3>
+                <div class="stack-s">
+                  <p class="body">
+                    {principle.parts.map((part) =>
+                      part.sop ? (
+                        <Gate confirmed={site.confirmed.sop} note="needs SOP’s written OK (D2)" inline>
+                          {part.text}{' '}
+                        </Gate>
+                      ) : (
+                        <span>{part.text} </span>
+                      )
+                    )}
+                  </p>
+                  {principle.modulesLink && <a class="more" href="#modules">See the modules</a>}
+                </div>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section id="sessions" class="sec band-cream target" aria-labelledby="sessions-title">
+    <div class="wrap stack">
+      <h2 class="h2" id="sessions-title">{p.sessionsTitle}</h2>
+      <ol class="steps" data-inview>
+        {
+          p.sessions.map((part, index) => (
+            <li class="step-card step" style={`--i: ${index}`}>
+              <span class="badge">Step {index + 1}</span>
+              <span class="h4">{part}</span>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="stack-s measure">
+        <p class="lead body">{p.sessionsText}</p>
+        {p.howWeWork.map((line) => <p class="body">{line}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <section id="modules" class="sec target" aria-labelledby="modules-title">
+    <div class="wrap stack">
+      <div class="peek">
+        <ComingSoon title="Module 1 preview coming soon" text="A sneak peek at the first slides of Module 1." />
+        <div class="stack-m peek-text">
+          <p class="eyebrow">Module 1 sneak peek</p>
+          <h2 class="h2" id="modules-title">{first.title}</h2>
+          <span class="btn btn--soon self-start">Opening soon</span>
+        </div>
+      </div>
+      <h3 class="h3">All {countLabel(i.modules.length, 'modules').toLowerCase()}</h3>
+      <ol class="rows modules">
+        {
+          i.modules.map((module) => (
+            <li class="module">
+              <span class="h4">{module.title}</span>
+              {module.text && <p class="body">{module.text}</p>}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section id="resources" class="sec band-cream target" aria-labelledby="resources-title">
+    <div class="wrap stack">
+      <h2 class="h2" id="resources-title">Resources</h2>
+      <p class="lead body measure">{i.resourcesTitle}</p>
+      <ul class="resources">
+        {
+          resources.map((resource) => (
+            <li class="resource">
+              <span class="h4">{resource.title}</span>
+              {resource.file ? (
+                <a class="btn" href={resource.file} download>
+                  Download<span class="sr-only"> {resource.title}</span>
+                </a>
+              ) : (
+                <span class="status">{resource.status}</span>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+      {
+        anyFile && (
+          <div class="stack-s measure">
+            <h3 class="h4">{i.coachTitle}</h3>
+            <p class="body">{i.coachText}</p>
+          </div>
+        )
+      }
+      <p class="small measure">
+        <strong>Health note:</strong> These guides are for learning only. They aren’t medical advice and can’t replace a doctor or nurse. In an emergency,
+        call emergency services.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .target {
+    scroll-margin-top: var(--tabs-h);
+  }
+  .rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .rows > :global(*) {
+    border-top: 1px solid var(--navy-100);
+  }
+  /* Principles aren't a sequence: title over text, two to a row. */
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-48) var(--space-64);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .principle {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    max-width: 640px;
+  }
+  .more {
+    align-self: flex-start;
+    padding: 10px 0;
+    font-weight: 700;
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-24);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .step-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-12);
+    padding: var(--space-24);
+    border: 1px solid var(--navy-100);
+    border-radius: var(--radius);
+    background: var(--white);
+  }
+  .badge,
+  .status {
+    display: inline-flex;
+    padding: var(--space-4) var(--space-12);
+    border-radius: var(--radius-pill);
+    background: var(--aqua);
+    color: var(--navy);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .h4 {
+    font-family: var(--font-display);
+  }
+  .peek {
+    display: grid;
+    grid-template-columns: minmax(0, 620px) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-64);
+  }
+  .peek-text {
+    min-width: 0;
+  }
+  .module {
+    padding: var(--space-16) 0;
+  }
+  .resources {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .resource {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-12) var(--space-24);
+  }
+  @media (max-width: 1023px) {
+    .steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 860px) {
+    .peek {
+      grid-template-columns: 1fr;
+      gap: var(--space-32);
+    }
+  }
+  @media (max-width: 720px) {
+    .principles {
+      grid-template-columns: 1fr;
+      gap: var(--space-32);
+    }
+    .steps {
+      grid-template-columns: 1fr;
+    }
+    .resource {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

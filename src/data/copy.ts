@@ -11,6 +11,9 @@ export const copy = {
   essenceBody:
     'One idea sits behind everything we do: no pace is too slow, no goal is too small, and there’s no wrong kind of body or brain.',
   heroLine: 'Soles with Goals is a running community where every way of moving counts.',
+  // Her intake description, with the community's name.
+  introLine:
+    'Soles with Goals brings young Pakistani girls with and without intellectual disabilities into one community to enjoy running regardless of their level.',
   startLine: 'The start line belongs to every woman.',
   vision:
     'A world where every woman, whether her disability is visible, invisible or not there at all, can look at a start line and think: that’s mine.',
@@ -158,6 +161,8 @@ export const copy = {
   involved: {
     title: 'Any girl who shows up is part of the team.',
     sub: DRAFT('Come run with us, coach with us or partner with us.'),
+    formNote:
+      'Our sign-up forms are Google Forms in Amalia’s account. If you’re under 18, a parent or guardian needs to fill in or sign the consent part. Please leave out health details and anyone else’s personal details.',
     roles: [
       { id: 'run', title: 'Run with us', text: 'Walk, wheel or run, at your own pace.' as string | null, form: 'run' },
       { id: 'families', title: 'Families', text: null as string | null, form: 'families' },

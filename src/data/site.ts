@@ -11,9 +11,16 @@ export const site = {
   // pending items outlined, and noindex. Set to false before launch.
   review: true,
 
-  // The version that goes live once review is off. Stays 'plain' until a
-  // parent has agreed in writing to her photos being published.
-  liveVariant: 'plain' as Variant,
+  // A parent's written OK for Amalia's photos (blurred versions only): note
+  // the date and who gave it here when it arrives. Set only by the site's
+  // builder once that written OK is in hand.
+  photosConsent: false,
+
+  // The version that goes live once review is off: 'photos' only once
+  // photosConsent is true, otherwise 'plain'.
+  get liveVariant(): Variant {
+    return this.photosConsent ? 'photos' : 'plain';
+  },
 
   email: null as string | null,
   socials: [] as { label: string; url: string }[],

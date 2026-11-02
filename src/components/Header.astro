@@ -6,78 +6,85 @@ import { site, showPending } from '../data/site';
 interface Props {
   variant: Variant;
   current?: string;
+  ground?: 'white' | 'rasp';
 }
-const { variant, current } = Astro.props;
+const { variant, current, ground = 'white' } = Astro.props;
+const rasp = ground === 'rasp';
 
-const nav = [
-  { key: 'about', label: 'About', path: 'about' },
-  { key: '5k', label: 'The 5K', path: 'the-5k' },
-  { key: 'approach', label: 'Our Approach', path: 'approach' },
-  { key: 'impact', label: 'Impact', path: 'impact' },
-  { key: 'stories', label: 'Stories', path: 'stories' },
-  { key: 'involved', label: 'Get involved', path: 'get-involved' },
-];
+// Fundraising shows once SOP and the fundraiser are confirmed (outlined in the review build).
 const donateReady = site.confirmed.donate && site.confirmed.sop;
 const showDonate = showPending(donateReady);
+const donate = { key: 'donate', label: 'Fundraising', path: 'fundraising', gate: !donateReady };
+
+type Item = { key: string; label: string; path: string; gate?: boolean };
+const main: Item[] = [
+  { key: 'about', label: 'About', path: 'about' },
+  { key: 'how', label: 'How it works', path: 'how-it-works' },
+  { key: '5k', label: 'The 5K', path: 'the-5k' },
+  { key: 'stories', label: 'Stories', path: 'stories' },
+  ...(showDonate ? [donate] : []),
+  { key: 'contact', label: 'Contact', path: 'contact' },
+];
+const involved: Item = { key: 'involved', label: 'Get involved', path: 'get-involved' };
+// The phone menu lists every page.
+const menu: Item[] = [...main.slice(0, 4), involved, ...(showDonate ? [donate] : []), main[main.length - 1]];
 ---
 
-<header class="site-header">
-  <div class="bar wrap">
-    <a class="home" href={link(variant, '/')} aria-label="Soles with Goals, home"><Logo /></a>
+<header class:list={['site-header', { 'site-header--rasp': rasp }]}>
+  <div class="wrap bar">
+    <a class="home" href={link(variant, '/')} aria-label="Soles with Goals, home"><Logo tone={rasp ? 'raspberry' : 'primary'} /></a>
     <nav class="nav" aria-label="Main">
       <ul>
         {
-          nav.map((item) => (
+          main.map((item) => (
             <li>
-              <a href={link(variant, item.path)} aria-current={current === item.key ? 'page' : undefined}>
+              <a
+                class:list={['nav-link', { gate: item.gate }]}
+                data-note={item.gate ? 'needs D2 + D3' : undefined}
+                href={link(variant, item.path)}
+                aria-current={current === item.key ? 'page' : undefined}
+              >
                 {item.label}
               </a>
             </li>
           ))
         }
       </ul>
+      <a
+        class:list={['btn', { 'btn--on-rasp': rasp }]}
+        href={link(variant, involved.path)}
+        aria-current={current === involved.key ? 'page' : undefined}
+      >
+        {involved.label}
+      </a>
     </nav>
-    {
-      showDonate && (
-        <a
-          class:list={['donate', { gate: !donateReady }]}
-          data-note="needs D2 + D3"
-          href={link(variant, 'fundraising')}
-          aria-current={current === 'donate' ? 'page' : undefined}
-        >
-          Donate
-        </a>
-      )
-    }
-    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Menu">
-      <svg class="i-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
-      <svg class="i-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
-    </button>
+    <div class="phone">
+      <a class="nav-link" href={link(variant, 'contact')} aria-current={current === 'contact' ? 'page' : undefined}>Contact</a>
+      <button
+        class:list={['btn', 'menu-btn', rasp ? 'btn--outline-light' : 'btn--outline']}
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-menu"
+      >
+        <span class="i-open">Menu</span><span class="i-close">Close</span>
+      </button>
+    </div>
   </div>
   <nav id="site-menu" class="panel" aria-label="Menu" hidden>
     <ul class="wrap">
       {
-        nav.map((item, index) => (
+        menu.map((item, index) => (
           <li style={`--i: ${index}`}>
-            <a href={link(variant, item.path)} aria-current={current === item.key ? 'page' : undefined}>
+            <a
+              class:list={{ gate: item.gate }}
+              data-note={item.gate ? 'needs D2 + D3' : undefined}
+              href={link(variant, item.path)}
+              aria-current={current === item.key ? 'page' : undefined}
+            >
               {item.label}
             </a>
           </li>
         ))
-      }
-      {
-        showDonate && (
-          <li style={`--i: ${nav.length}`}>
-            <a
-              class:list={['quiet', { gate: !donateReady }]}
-              data-note="needs D2 + D3"
-              href={link(variant, 'fundraising')}
-              aria-current={current === 'donate' ? 'page' : undefined}
-            >
-              Donate
-            </a>
-          </li>
-        )
       }
     </ul>
   </nav>
@@ -103,87 +110,89 @@ const showDonate = showPending(donateReady);
   .site-header {
     position: relative;
     z-index: 20;
-    border-bottom: 1px solid var(--navy-100);
     background: var(--white);
+    color: var(--navy);
+  }
+  .site-header--rasp {
+    background: var(--rasp);
+    color: var(--white);
   }
   .bar {
     display: flex;
     align-items: center;
-    gap: 12px 28px;
-    min-height: 84px;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 80px;
   }
   .home {
-    margin-right: auto;
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    flex-shrink: 0;
     text-decoration: none;
   }
   ul {
-    list-style: none;
-  }
-  /* Leave the menu panel's .wrap gutter alone. */
-  ul:not(.wrap) {
     margin: 0;
     padding: 0;
+    list-style: none;
+  }
+  .panel ul {
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-32);
   }
   .nav ul {
     display: flex;
-    flex-wrap: wrap;
-    gap: 4px 22px;
+    align-items: center;
+    gap: clamp(20px, 2.25vw, 32px);
+  }
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    white-space: nowrap;
+    background: linear-gradient(currentColor, currentColor) left calc(100% - 6px) / 0 2px no-repeat;
+    transition: background-size 0.25s ease;
+  }
+  .nav-link:hover,
+  .nav-link[aria-current='page'] {
+    color: inherit;
+    background-size: 100% 2px;
   }
   /* Review build: the note sits under the link, since the header is at the top edge. */
-  .donate.gate::before {
+  .nav-link.gate::before {
     top: auto;
     right: 0;
     bottom: -14px;
   }
-  .nav a,
-  .donate {
-    display: inline-block;
-    padding: 12px 0;
-    color: var(--navy);
-    font-size: 16px;
-    text-decoration: none;
-    background: linear-gradient(var(--rasp), var(--rasp)) left calc(100% - 6px) / 0 3px no-repeat;
-    transition: background-size 0.25s ease;
-  }
-  .nav a:hover,
-  .donate:hover,
-  .nav a[aria-current='page'],
-  .donate[aria-current='page'] {
-    background-size: 100% 3px;
-    color: var(--navy);
-  }
-  .nav a[aria-current='page'],
-  .donate[aria-current='page'] {
-    font-weight: 700;
-  }
-  .donate {
-    color: var(--navy-700);
-    font-size: 15px;
-  }
-  .menu-btn {
+  .phone {
     display: none;
     align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    padding: 0;
-    border: 2px solid var(--navy);
-    border-radius: 12px;
-    background: var(--white);
-    color: var(--navy);
-    cursor: pointer;
+    gap: var(--space-16);
   }
-  .i-close {
-    display: none;
+  .menu-btn {
+    min-width: 88px;
   }
-  .menu-btn[aria-expanded='true'] .i-close {
-    display: block;
-  }
+  .i-close,
   .menu-btn[aria-expanded='true'] .i-open {
     display: none;
   }
+  .menu-btn[aria-expanded='true'] .i-close {
+    display: inline;
+  }
   .panel {
     border-top: 1px solid var(--navy-100);
+    background: var(--white);
     padding: 4px 0 20px;
   }
   .panel a {
@@ -203,11 +212,11 @@ const showDonate = showPending(donateReady);
     content: '';
     width: 10px;
     height: 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: var(--rasp);
   }
-  .panel .quiet {
-    color: var(--navy-700);
+  .panel :focus-visible {
+    outline-color: var(--rasp-text);
   }
   /* The menu drops open and its links follow one after another. */
   @keyframes menu-open {
@@ -231,25 +240,24 @@ const showDonate = showPending(donateReady);
       animation-delay: calc(var(--i, 0) * 35ms + 60ms);
     }
   }
-  .menu-btn svg {
-    transition: rotate 0.25s ease;
-  }
-  .menu-btn[aria-expanded='true'] .i-close {
-    rotate: 90deg;
-  }
-  @media (max-width: 760px) {
-    .nav,
-    .donate {
+  @media (max-width: 999px) {
+    .nav {
       display: none;
     }
-    .menu-btn {
+    .phone {
       display: flex;
     }
-    .bar {
-      min-height: 68px;
+  }
+  @media (max-width: 359px) {
+    .phone {
+      gap: var(--space-8);
+    }
+    .menu-btn {
+      min-width: 0;
+      padding-inline: 14px;
     }
   }
-  @media (min-width: 761px) {
+  @media (min-width: 1000px) {
     .panel {
       display: none !important;
     }

@@ -26,8 +26,8 @@ npm run preview  # serves dist/ to check the build
 | Pages, one file each | `src/pages/[...v]/` |
 | Header, footer, Goal Ring, bib maker and other parts | `src/components/` |
 | Colours, fonts, spacing and motion | `src/styles/global.css` |
-| Photos (optimised at build time) | `src/assets/photos/` |
-| Running loops, share image and icons | `public/` |
+| Amalia's photos and running loops (blurred versions only) | `media/` |
+| Share image and icons | `public/` |
 
 Anything not known yet is `null` in `site.ts` or `copy.ts`, and the page shows a
 "coming soon" state until it's filled in. Lines wrapped in `DRAFT(...)` in `copy.ts`
@@ -41,21 +41,42 @@ are stand-ins that need Amalia's own words before launch.
   and with Amalia's photos at `/with-photos/`, with a switch at the bottom of each page.
   Anything waiting on a written confirmation (Special Olympics Pakistan, Donate,
   Fundraising) shows with a yellow note. Search engines are kept out.
-- **Live build** (`review: false`): only `liveVariant` is built, at the root, and
+- **Live build** (`review: false`): only one version is built, at the root, and
   anything not yet confirmed is left out. `confirmed.sop` and `confirmed.donate` turn
   those parts on once the confirmations are in writing.
 
-Photos of anyone under 18 go live only with a parent's or guardian's written OK. If the
-photos version isn't used, delete `public/media/`: everything in `public/` ships with
-every build.
+Photos of anyone under 18 go live only with a parent's or guardian's written OK. The
+photos and loops in `media/` are the blurred versions (school lettering, race-bib names
+and bystanders removed). They are copied into a build only when a page links to them, so
+the version without photos never ships them.
 
 ## Going live
 
 1. Fill in `site.ts` and replace the `DRAFT(...)` lines.
-2. Set `review: false` and choose `liveVariant`.
+2. Set `review: false`. The site goes live without photos. To go live with Amalia's
+   photos (blurred versions only), once a parent's written OK is in, change this one line
+   in `src/data/site.ts`, noting the date and who gave the OK in the comment above it:
+   `photosConsent: false,` → `photosConsent: true,`
 3. Host on any static host: build command `npm run build`, output folder `dist`, and an
    environment variable `SITE_URL` set to the domain (canonical links, the sitemap and
    share cards need it). On Render, `render.yaml` sets this up: New > Blueprint, pick
    this repo, then fill in `SITE_URL`.
 4. Update the "Last updated" date on the privacy page, and keep that page matching what
    the site loads (an embedded video or analytics, for example).
+
+## Adding Amalia's film
+
+The film slot at the top of About stays hidden while `film` in `src/data/site.ts` is
+`null`. When the documentary is online, set it like this:
+
+```ts
+film: {
+  title: 'The film’s title',
+  embedUrl: 'https://www.youtube-nocookie.com/embed/VIDEO_ID',
+  note: '',
+},
+```
+
+Use a privacy-enhanced embed (`youtube-nocookie.com` for YouTube, or Vimeo's
+`?dnt=1`), add captions for any speech, and add a line about the embedded video to the
+privacy page in the same change.

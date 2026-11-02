@@ -1,0 +1,27 @@
+---
+// A page that moved: sends visitors (and old links) on to its new place.
+import { link, type Variant } from '../lib/variant';
+
+interface Props {
+  variant: Variant;
+  to: string;
+  title: string;
+}
+const { variant, to, title } = Astro.props;
+const href = link(variant, to);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · Soles with Goals</title>
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0; url=${href}`} />
+    <link rel="canonical" href={href} />
+  </head>
+  <body>
+    <p><a href={href}>{title} has moved. Continue to How it works.</a></p>
+  </body>
+</html>

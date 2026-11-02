@@ -1,0 +1,33 @@
+---
+// Decorative art from her brand set (public/art): track lanes, soles, the
+// course loop, the finish tape. Never carries words; screen readers skip it.
+interface Props {
+  name: 'hero-track' | 'soles-stride' | 'icon-walk' | 'icon-wheel' | 'icon-run' | 'route-5k' | 'finish-tape' | 'lane-corner';
+  width: number;
+  height: number;
+  eager?: boolean;
+  class?: string;
+}
+const { name, width, height, eager = false, class: className } = Astro.props;
+---
+
+<img
+  class:list={['art', className]}
+  src={`/art/${name}.svg`}
+  width={width}
+  height={height}
+  alt=""
+  aria-hidden="true"
+  loading={eager ? 'eager' : 'lazy'}
+  decoding="async"
+/>
+
+<style>
+  .art {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+  }
+</style>

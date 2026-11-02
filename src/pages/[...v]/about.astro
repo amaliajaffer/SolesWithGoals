@@ -1,11 +1,12 @@
 ---
-import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
-import GoalRing from '../../components/GoalRing.astro';
 import Gate from '../../components/Gate.astro';
 import FilmIntro from '../../components/FilmIntro.astro';
-import stadium from '../../assets/photos/stadium.jpg';
-import { variantPaths, type Variant } from '../../lib/variant';
+import GoalRing from '../../components/GoalRing.astro';
+import PageHead from '../../components/PageHead.astro';
+import SubTabs from '../../components/SubTabs.astro';
+import TrackMedia from '../../components/TrackMedia.astro';
+import { variantPaths, link, type Variant } from '../../lib/variant';
 import { copy } from '../../data/copy';
 import { site } from '../../data/site';
 
@@ -15,279 +16,258 @@ export function getStaticPaths() {
 const { variant } = Astro.props as { variant: Variant };
 const photos = variant === 'photos';
 const essay = copy.essay;
+const tabs = [
+  { id: 'about-us', label: 'About us' },
+  { id: 'values', label: 'Our values' },
+  { id: 'story', label: 'Amalia’s story' },
+];
+const keys = ['key--arc', 'key--dots', 'key--dot'];
 ---
 
 <Base title="About" description={copy.vision} variant={variant} current="about">
-  <section class="sec intro">
+  <PageHead title={copy.startLine} flush />
+  <SubTabs items={tabs} />
+
+  <section id="about-us" class="sec target" aria-label="About us">
     <div class="wrap stack">
-      <p class="eyebrow">About</p>
-      <h1 class="h1 title">{copy.startLine}</h1>
-    </div>
-  </section>
-
-  <FilmIntro variant={variant} />
-
-  <nav class="tabs" aria-label="On this page">
-    <div class="wrap">
-      <a href="#about-us" class="is-cur" aria-current="location">About us</a>
-      <a href="#values">Our values</a>
-      <a href="#story">Amalia’s story</a>
-    </div>
-  </nav>
-
-  <section id="about-us" class="sec target">
-    <div class="wrap two">
-      <article class="card card--navy pad">
-        <p class="eyebrow">Vision</p>
-        <p class="big">{copy.vision}</p>
-      </article>
-      <article class="card card--outline pad">
-        <p class="eyebrow">Mission</p>
-        <p class="mid">
-          {copy.mission}<Gate confirmed={site.confirmed.sop} note="needs SOP’s written OK (D2)" inline>{copy.missionSop}</Gate>.
-        </p>
-      </article>
-    </div>
-  </section>
-
-  <section class="sec sec--line">
-    <div class="narrow stack who">
-      <h2 class="eyebrow">Who we are</h2>
-      {
-        copy.whoWeAre.map((part) =>
-          part.sop ? (
-            <Gate confirmed={site.confirmed.sop} note="SOP affiliation and figure: needs SOP’s written OK (D2)">
-              <p>{part.text}</p>
-            </Gate>
-          ) : (
-            <p>{part.text}</p>
-          )
-        )
-      }
-    </div>
-  </section>
-
-  <section class="sec sec--line">
-    <div class="wrap three">
-      <div class="stack">
-        <p class="eyebrow">Origin story</p>
-        <p>{copy.origin}</p>
+      <FilmIntro variant={variant} />
+      <div class="two">
+        <div class="stack-s">
+          <h2 class="eyebrow">Our vision</h2>
+          <p class="lead strong">{copy.vision}</p>
+        </div>
+        <div class="stack-s">
+          <h2 class="eyebrow">Our mission</h2>
+          <p class="lead strong">
+            {copy.mission}<Gate confirmed={site.confirmed.sop} note="needs SOP’s written OK (D2)" inline>{copy.missionSop}</Gate>.
+          </p>
+        </div>
       </div>
-      <div class="stack">
-        <p class="eyebrow">Brand essence</p>
-        <p class="essence">{copy.essence}</p>
-        <p>{copy.essenceBody}</p>
-      </div>
-      <div class="stack">
-        <p class="eyebrow">The name</p>
-        {copy.name.map((part) => <p><strong>{part.word}</strong> = {part.text}</p>)}
-      </div>
-    </div>
-  </section>
-
-  <section class="sec band-navy on-dark">
-    <div class="wrap split">
-      <div class="ring-wrap">
-        <GoalRing tone="reversed" size={300} draw label="The Goal Ring: a solid arc, a dotted arc and a dot where start meets finish" />
-      </div>
-      <div class="stack ring-text">
-        <p class="eyebrow">The Goal Ring</p>
-        <h2 class="h2">{copy.ring.title}</h2>
-        {copy.ring.parts.map((part) => <p><strong class={`tone-${part.tone}`}>{part.lead}</strong> {part.text}</p>)}
-        <p>{copy.ring.close}</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="values" class="sec target">
-    <div class="wrap stack gap-l">
-      <h2 class="eyebrow">Our values</h2>
-      <div class="grid">
+      <h2 class="h2 who-title">Who we are</h2>
+      <div class="stack-m measure">
         {
-          copy.values.map((value) => (
-            <article class="card value-card" data-inview>
-              <h3 class="h3"><span class="mark">{value.title}</span></h3>
-              <p class="value">{value.text}</p>
-            </article>
-          ))
+          copy.whoWeAre.map((part, index) => {
+            const text = <p class:list={index === 0 ? 'lead body' : 'body'}>{part.text}</p>;
+            return part.sop ? (
+              <Gate confirmed={site.confirmed.sop} note="SOP affiliation and figure: needs SOP’s written OK (D2)">
+                {text}
+              </Gate>
+            ) : (
+              text
+            );
+          })
         }
       </div>
     </div>
   </section>
 
-  <section id="story" class="sec band-cream target">
-    <div class="narrow essay">
-      <p class="eyebrow">Amalia’s story · Why I run</p>
-      <p class="opening">“{essay.opening}</p>
-      {essay.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
-      <div class="beats">{essay.beats.map((beat) => <p>{beat}</p>)}</div>
-      {essay.middle.map((paragraph) => <p>{paragraph}</p>)}
-      {
-        photos && (
-          <figure class="track">
-            <div class="photo-oval">
-              <Image src={stadium} widths={[400, 600, 800]} sizes="(max-width: 760px) 80vw, 400px" alt="Amalia racing on an outdoor track" />
+  <section class="sec band-cream" aria-labelledby="name-title">
+    <div class="wrap stack">
+      <h2 class="h2" id="name-title">The name</h2>
+      <div class="two">
+        {
+          copy.name.map((part) => (
+            <div class="stack-s">
+              <p class="display-l rasp">{part.word}</p>
+              <p class="lead">{part.text}</p>
             </div>
-          </figure>
-        )
-      }
-      {essay.end.map((paragraph) => <p>{paragraph}</p>)}
-      <div class="closing">
-        <p>{essay.closing[0]}</p>
-        <p>{essay.closing[1]}”</p>
+          ))
+        }
       </div>
-      <p class="small">{essay.byline}</p>
+      <h3 class="h3 ring-title">{copy.ring.title}</h3>
+      <div class="ring-explain">
+        <GoalRing size={320} draw class="big-ring" label="The Goal Ring: a solid arc, a dotted arc and a dot where start meets finish" />
+        <ul class="callouts">
+          {
+            copy.ring.parts.map((part, index) => (
+              <li class="callout">
+                <span class:list={['key', keys[index]]} aria-hidden="true" />
+                <div class="stack-s">
+                  <p class="h4">{part.lead}</p>
+                  <p class="body">{part.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <p class="lead">{copy.ring.close}</p>
+    </div>
+  </section>
+
+  <section id="values" class="sec target" aria-labelledby="values-title">
+    <div class="wrap stack">
+      <h2 class="h2" id="values-title">Our values</h2>
+      <ul class="values">
+        {
+          copy.values.map((value) => (
+            <li class="stack-s value">
+              <h3 class="h4">{value.title}</h3>
+              <p class="body">{value.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section id="story" class="sec band-cream target" aria-labelledby="story-title">
+    <div class:list={['wrap', 'story', { 'story--text': !photos }]}>
+      {photos && <TrackMedia id="story-portrait" shape="portrait" class="story-media" />}
+      <div class="stack-m story-text">
+        <p class="eyebrow">Amalia’s story</p>
+        <h2 class="h2" id="story-title">{essay.opening}</h2>
+        <blockquote class="stack-m">
+          <p class="h3 rasp">{essay.quote}</p>
+          <footer class="small">{essay.byline}</footer>
+        </blockquote>
+        <a class="btn self-start" href={link(variant, 'stories#why-i-run')}>Read “Why I run”</a>
+      </div>
     </div>
   </section>
 </Base>
 
-<script>
-  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.tabs a'));
-  const targets = links.map((a) => document.querySelector<HTMLElement>(a.hash)).filter((el): el is HTMLElement => el !== null);
-  const mark = (id: string) => {
-    for (const a of links) {
-      const on = a.hash === `#${id}`;
-      a.classList.toggle('is-cur', on);
-      if (on) a.setAttribute('aria-current', 'location');
-      else a.removeAttribute('aria-current');
-    }
-  };
-  const spy = () => {
-    const line = window.innerHeight * 0.35;
-    let current = targets[0]?.id;
-    for (const target of targets) if (target.getBoundingClientRect().top <= line) current = target.id;
-    if (current) mark(current);
-  };
-  window.addEventListener('scroll', spy, { passive: true });
-  spy();
-</script>
-
 <style>
-  .intro {
-    padding-bottom: 32px;
-  }
-  .title {
-    max-width: 16ch;
-  }
-  .tabs {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    border-bottom: 1px solid var(--navy-100);
-    background: var(--white);
-  }
-  .tabs .wrap {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 32px;
-  }
-  .tabs a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 52px;
-    color: var(--navy);
-    font-size: 17px;
-    text-decoration: none;
-    background: linear-gradient(var(--rasp), var(--rasp)) left calc(100% - 2px) / 0 3px no-repeat;
-    transition: background-size 0.3s ease;
-  }
-  .tabs a:hover,
-  .tabs a.is-cur {
-    background-size: 100% 3px;
-  }
-  .tabs a.is-cur {
-    font-weight: 700;
-  }
   .target {
-    scroll-margin-top: 64px;
+    scroll-margin-top: var(--tabs-h);
+  }
+  .strong {
+    font-weight: 700;
   }
   .two {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-    gap: 24px;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-32) var(--space-64);
   }
-  .pad {
-    padding: 32px;
+  .who-title {
+    margin-top: var(--space-32);
   }
-  .card--navy .eyebrow {
-    color: var(--aqua);
+  .ring-title {
+    margin-top: var(--space-16);
   }
-  .big {
-    font-family: var(--font-display);
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 1.3;
-  }
-  .mid {
-    font-size: 20px;
-  }
-  .three {
+  /* Her ring drawn once, with each line keyed to its part. */
+  .ring-explain {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-    gap: 40px;
+    grid-template-columns: minmax(0, 320px) minmax(0, 640px);
+    align-items: center;
+    gap: var(--space-48) var(--space-96);
   }
-  .essence {
-    color: var(--rasp);
-    font-family: var(--font-display);
-    font-size: 32px;
-    font-weight: 800;
-    line-height: 1.1;
+  .ring-explain :global(.big-ring) {
+    width: 100%;
+    height: auto;
   }
-  .ring-wrap {
-    display: flex;
-    flex: 0 1 320px;
-    justify-content: center;
-  }
-  .ring-text {
-    gap: 18px;
-  }
-  .tone-aqua {
-    color: var(--aqua);
-  }
-  .tone-rasp {
-    color: var(--rasp-on-dark);
-  }
-  .gap-l {
-    gap: 28px;
-  }
-  .value {
-    font-size: 16px;
-  }
-  .value-card {
-    --mark-delay: 0.45s;
-  }
-  .who {
-    gap: 18px;
-  }
-  .who p {
-    font-size: 19px;
-  }
-  .essay {
+  .callouts {
     display: flex;
     flex-direction: column;
-    gap: 22px;
-  }
-  .track {
+    gap: var(--space-32);
     margin: 0;
-    align-self: center;
-    width: min(400px, 100%);
+    padding: 0;
+    list-style: none;
   }
-  .opening {
-    font-family: var(--font-display);
-    font-size: clamp(30px, 3.4vw, 46px);
-    font-weight: 800;
-    line-height: 1.15;
+  .callout {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: var(--space-24);
+    align-items: start;
   }
-  .beats p {
-    font-family: var(--font-display);
-    font-size: 26px;
-    font-weight: 600;
-    line-height: 1.35;
+  .key {
+    display: block;
+    margin-top: 10px;
   }
-  .closing p {
+  .key--arc {
+    width: 48px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--navy);
+  }
+  .key--dots {
+    width: 48px;
+    height: 8px;
+    background: radial-gradient(circle, var(--rasp) 3px, transparent 3.5px) 0 50% / 16px 8px repeat-x;
+  }
+  .key--dot {
+    width: 16px;
+    height: 16px;
+    margin-top: 5px;
+    border-radius: var(--radius-pill);
+    background: var(--rasp);
+  }
+  .h4 {
     font-family: var(--font-display);
-    font-size: clamp(26px, 2.8vw, 36px);
-    font-weight: 800;
-    line-height: 1.25;
+  }
+  .values {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-32);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .value {
+    gap: var(--space-8);
+  }
+  .story {
+    display: flex;
+    align-items: center;
+    gap: var(--space-64);
+  }
+  .story :global(.story-media) {
+    flex: 0 0 min(420px, 36%);
+  }
+  .story-text {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 860px;
+  }
+  /* Without her clip: the opening line on the left, her words on the right. */
+  .story--text .story-text {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 640px);
+    align-items: start;
+    gap: var(--space-24) var(--space-64);
+    max-width: none;
+  }
+  .story--text .eyebrow {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .story--text h2 {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .story--text blockquote {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  .story--text .btn {
+    grid-column: 2;
+    grid-row: 3;
+  }
+  @media (max-width: 1023px) {
+    .values {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 760px) {
+    .two,
+    .values,
+    .ring-explain {
+      grid-template-columns: 1fr;
+    }
+    .ring-explain :global(.big-ring) {
+      width: min(200px, 60%);
+    }
+    .story {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-32);
+    }
+    .story :global(.story-media) {
+      flex: none;
+      width: min(100%, 420px);
+    }
+    .story--text .story-text {
+      display: flex;
+    }
   }
 </style>

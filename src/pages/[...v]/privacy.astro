@@ -2,6 +2,7 @@
 // Written from what this build actually loads: self-hosted fonts, no
 // cookies, no analytics, no forms on the site. Update it whenever that changes.
 import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
 import { variantPaths, type Variant } from '../../lib/variant';
 import { site } from '../../data/site';
 
@@ -13,15 +14,15 @@ const filmHost = site.film ? new URL(site.film.embedUrl).hostname.replace(/^www\
 ---
 
 <Base title="Privacy" description="How the Soles with Goals website handles information about you." variant={variant}>
+  <PageHead title="Privacy" lead="Here’s what this website does, and doesn’t do, with your information." />
+
   <section class="sec">
-    <div class="narrow stack gap-l">
-      <h1 class="h1">Privacy</h1>
-      <p class="lead">Here’s what this website does, and doesn’t do, with your information.</p>
+    <div class="wrap stack body-text">
 
       <div class="stack">
         <h2 class="h3">Who runs this site</h2>
         <p>
-          Soles with Goals is a student-led project run by Amalia Jaffer.
+          Soles with Goals is a student-led project run by Amalia Jaffer.{' '}
           {site.email ? <>You can write to us at <a href={`mailto:${site.email}`}>{site.email}</a>.</> : 'Our contact details are coming soon.'}
         </p>
       </div>
@@ -48,11 +49,16 @@ const filmHost = site.film ? new URL(site.film.embedUrl).hostname.replace(/^www\
 </Base>
 
 <style>
-  .gap-l {
-    gap: 28px;
+  .body-text {
+    gap: var(--space-48);
   }
-  .stack {
-    gap: 10px;
+  .body-text > .stack {
+    max-width: 760px;
+    gap: var(--space-16);
+  }
+  .body-text p,
+  .body-text li {
+    color: var(--navy-700);
   }
   .list {
     display: flex;

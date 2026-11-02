@@ -15,8 +15,10 @@ interface Props {
   description: string;
   variant: Variant;
   current?: string;
+  // Raspberry header on Home and The 5K, white elsewhere.
+  ground?: 'white' | 'rasp';
 }
-const { title, description, variant, current } = Astro.props;
+const { title, description, variant, current, ground = 'white' } = Astro.props;
 const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · Every pace counts`;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 // Share cards need absolute image URLs; without a domain yet, fall back to the path.
@@ -44,7 +46,7 @@ const organisation = {
     {canonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta name="theme-color" content="#07195A" />
+    <meta name="theme-color" content={ground === 'rasp' ? '#DC0F5E' : '#FFFFFF'} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={fullTitle} />
@@ -60,10 +62,9 @@ const organisation = {
     <!-- Before first paint: lets CSS hold scroll-triggered animations until seen. Without JS everything shows. -->
     <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
-  <body>
+  <body class:list={{ 'ground-rasp': ground === 'rasp' }}>
     <a class="skip" href="#main">Skip to content</a>
-    <Header variant={variant} current={current} />
-    <div class="routebar" aria-hidden="true"></div>
+    <Header variant={variant} current={current} ground={ground} />
     <main id="main">
       <slot />
     </main>

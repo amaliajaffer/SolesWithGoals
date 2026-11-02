@@ -21,9 +21,35 @@
   --note-line: #e3c766;
   --font-display: 'Bricolage Grotesque Variable', 'Atkinson Hyperlegible', system-ui, sans-serif;
   --font-body: 'Atkinson Hyperlegible', system-ui, sans-serif;
-  --wrap: 1200px;
-  --gutter: clamp(20px, 4vw, 32px);
-  --radius: 16px;
+
+  /* Shape and spacing */
+  --radius: 12px;
+  --radius-pill: 999px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-96: 96px;
+  --space-128: 128px;
+
+  /* Page frame: 1312 px of content with 64 px sides at 1440, 16 px sides on a phone */
+  --content: 1312px;
+  --gutter: clamp(16px, 4.45vw, 64px);
+  --section: clamp(64px, 8.9vw, 128px);
+  --gap: clamp(24px, 2.25vw, 32px);
+
+  /* Type scale (desktop size, phone size) */
+  --display-xl: clamp(52px, 6.67vw, 96px);
+  --display-l: clamp(44px, 5vw, 72px);
+  --h2: clamp(34px, 3.34vw, 48px);
+  --h3: clamp(24px, 1.95vw, 28px);
+  /* Seven sizes in all: 96, 72, 48, 28, 21, 18, 15 (phone sizes step down) */
+  --quote: var(--h2);
+  --tabs-h: 96px;
 }
 
 *,
@@ -59,18 +85,41 @@ a:hover {
   outline-offset: 3px;
   border-radius: 4px;
 }
-.on-dark :focus-visible {
+.on-dark :focus-visible,
+.band-navy :focus-visible {
   outline-color: var(--aqua);
+}
+.band-rasp :focus-visible,
+.site-header--rasp .bar :focus-visible {
+  outline-color: var(--white);
 }
 h1,
 h2,
-h3 {
+h3,
+h4 {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 800;
-  letter-spacing: -0.01em;
 }
-p {
+h1,
+h2,
+h3,
+h4,
+.display-xl,
+.display-l,
+.h2,
+.h3,
+.h4,
+.quote {
+  text-wrap: balance;
+}
+p,
+li {
+  text-wrap: pretty;
+}
+p,
+blockquote,
+figure {
   margin: 0;
 }
 
@@ -82,16 +131,13 @@ p {
   clip-path: inset(50%);
   white-space: nowrap;
 }
-.rasp {
-  color: var(--rasp);
-}
 .skip {
   position: absolute;
   left: 12px;
   top: -64px;
   z-index: 100;
   padding: 10px 18px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--navy);
   color: var(--white);
   font-weight: 700;
@@ -104,229 +150,205 @@ p {
 
 /* Layout */
 .wrap {
-  max-width: var(--wrap);
-  margin: 0 auto;
-  padding: 0 var(--gutter);
-}
-.narrow {
-  max-width: 760px;
+  width: 100%;
+  max-width: calc(var(--content) + 2 * var(--gutter));
   margin: 0 auto;
   padding: 0 var(--gutter);
 }
 .sec {
-  padding: clamp(56px, 8vw, 88px) 0;
-}
-.sec--line {
-  border-top: 1px solid var(--navy-100);
-}
-.band-cream {
-  background: var(--cream);
-}
-.band-navy {
-  background: var(--navy);
-  color: var(--cream);
-}
-.band-navy a:not(.btn) {
-  color: var(--cream);
+  padding: var(--section) 0;
 }
 .stack {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-32);
+}
+.stack-s {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+.stack-m {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
 }
 .row {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: var(--space-12);
   align-items: center;
 }
-.split {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(32px, 5vw, 64px);
-  align-items: center;
+.measure {
+  max-width: 640px;
 }
-.split > * {
-  flex: 1 1 380px;
-  min-width: 0;
+.band-cream {
+  background: var(--cream);
 }
-.grid {
-  display: grid;
-  gap: 24px;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+.band-rasp {
+  background: var(--rasp);
+  color: var(--white);
+}
+.band-navy {
+  background: var(--navy);
+  color: var(--white);
+}
+.band-rasp a:not(.btn),
+.band-navy a:not(.btn) {
+  color: var(--white);
 }
 
 /* Type */
+.display-xl,
+.display-l,
+.h2,
+.h3,
+.h4 {
+  font-family: var(--font-display);
+  font-weight: 800;
+}
 .eyebrow {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
-  color: var(--rasp-text);
+  color: var(--navy);
+}
+.band-rasp .eyebrow {
+  color: var(--white);
 }
 .band-navy .eyebrow {
   color: var(--aqua);
 }
-.h1 {
-  font-size: clamp(44px, 6vw, 88px);
-  line-height: 1.02;
+.display-xl {
+  font-size: var(--display-xl);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+.display-l {
+  font-size: var(--display-l);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
 }
 .h2 {
-  font-size: clamp(30px, 3.4vw, 48px);
-  line-height: 1.1;
+  font-size: var(--h2);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
 }
 .h3 {
-  font-size: 22px;
-  line-height: 1.25;
+  font-size: var(--h3);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.h4 {
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+}
+.quote {
+  font-family: var(--font-display);
+  font-size: var(--quote);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
 }
 .lead {
-  max-width: 60ch;
-  font-size: clamp(19px, 1.6vw, 22px);
-  line-height: 1.55;
+  font-size: 21px;
+  line-height: 1.5;
 }
-.measure {
-  max-width: 68ch;
+.body {
+  color: var(--navy-700);
 }
 .small {
   font-size: 15px;
   line-height: 1.5;
   color: var(--navy-700);
 }
-.band-navy .small {
+.band-navy .small,
+.band-navy .body {
   color: var(--navy-100);
 }
-.statement {
-  max-width: 30ch;
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(28px, 3.4vw, 46px);
-  line-height: 1.22;
-}
-
-/* Cards */
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 24px;
-  border: 1px solid var(--navy-200);
-  border-radius: var(--radius);
-  background: var(--white);
-}
-a.card {
-  color: inherit;
-  text-decoration: none;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-a.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 14px 30px rgba(7, 25, 90, 0.12);
-}
-.card--rasp {
-  background: var(--rasp);
-  border-color: var(--rasp);
+.band-rasp .body {
   color: var(--white);
 }
-.card--navy {
-  background: var(--navy);
-  border-color: var(--navy);
-  color: var(--cream);
+.navy {
+  color: var(--navy);
 }
-.card--aqua {
-  background: var(--aqua);
-  border-color: var(--aqua);
-}
-.card--outline {
-  border: 2px solid var(--navy);
+.rasp {
+  color: var(--rasp);
 }
 
-/* Buttons */
+/* Buttons: Primary = the one action, Outline = the second, Opening soon = a
+   link that doesn't exist yet (a plain span, never clickable). */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 48px;
-  padding: 0 24px;
-  border: 2px solid var(--navy);
-  border-radius: 999px;
-  background: var(--white);
-  color: var(--navy);
-  font: 700 16px/1.1 var(--font-body);
+  min-height: 52px;
+  padding: 14px 22px;
+  border: 2px solid var(--rasp);
+  border-radius: var(--radius);
+  background: var(--rasp);
+  color: var(--white);
+  font: 700 18px/1.2 var(--font-body);
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  transition: transform 0.18s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.18s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 .btn:hover {
+  border-color: var(--rasp-text);
+  background: var(--rasp-text);
+  color: var(--white);
   transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(7, 25, 90, 0.14);
-  color: var(--navy);
 }
 .btn:active {
   transform: none;
-  box-shadow: none;
 }
-.btn--primary {
-  background: var(--rasp);
-  border-color: var(--rasp);
-  color: var(--white);
-}
-.btn--primary:hover {
-  background: var(--rasp-text);
-  border-color: var(--rasp-text);
-  color: var(--white);
-}
-.btn--light {
+.btn--outline {
+  border-color: var(--navy);
   background: transparent;
-  border-color: var(--cream);
-  color: var(--cream);
+  color: var(--navy);
 }
-.btn--light:hover {
-  color: var(--cream);
+.btn--outline:hover {
+  border-color: var(--navy);
+  background: var(--navy);
+  color: var(--white);
+}
+.btn--on-rasp {
+  border-color: var(--white);
+  background: var(--white);
+  color: var(--rasp);
+}
+.btn--on-rasp:hover {
+  border-color: var(--cream);
+  background: var(--cream);
+  color: var(--rasp-text);
+}
+.btn--outline-light {
+  border-color: var(--white);
+  background: transparent;
+  color: var(--white);
+}
+.btn--outline-light:hover {
+  border-color: var(--white);
+  background: var(--white);
+  color: var(--rasp);
 }
 .btn--soon,
 .btn--soon:hover {
-  border-style: dashed;
-  border-color: var(--navy-400);
-  background: var(--white);
+  border-color: var(--navy-100);
+  background: var(--cream);
   color: var(--navy-700);
   cursor: default;
   transform: none;
-  box-shadow: none;
 }
-
-/* "Coming soon" states for content we don't have yet */
-.soon {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 16px 20px;
-  border: 2px dashed var(--rasp);
-  border-radius: 14px;
-  background: var(--white);
-  color: var(--navy);
-}
-.soon strong {
-  font-size: 16px;
-}
-.soon span {
-  font-size: 15px;
-  color: var(--navy-700);
-}
-
-.photo-oval {
-  overflow: hidden;
-  aspect-ratio: 3 / 4;
-  border: 4px solid var(--aqua);
-  border-radius: 999px;
-  background: var(--navy-100);
-}
-.photo-oval img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.self-start {
+  align-self: flex-start;
 }
 
 /* Review build only: items waiting for a written OK */
@@ -367,16 +389,6 @@ a.card:hover {
 .site-header {
   view-transition-name: site-header;
 }
-.routebar {
-  position: relative;
-  z-index: 5;
-  height: 3px;
-  margin-bottom: -3px;
-  background: var(--rasp);
-  opacity: 0;
-  transform-origin: left center;
-  pointer-events: none;
-}
 @keyframes vt-out {
   to {
     opacity: 0;
@@ -386,20 +398,6 @@ a.card:hover {
   from {
     opacity: 0;
     transform: translateY(12px);
-  }
-}
-@keyframes route-bar {
-  0% {
-    transform: scaleX(0);
-    opacity: 1;
-  }
-  70% {
-    transform: scaleX(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scaleX(1);
-    opacity: 0;
   }
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -415,67 +413,6 @@ a.card:hover {
   html {
     scroll-behavior: smooth;
   }
-  .routebar {
-    animation: route-bar 0.75s cubic-bezier(0.4, 0, 0.2, 1) both;
-  }
-}
-
-/* Sections and cards fade up as they scroll in (Chrome and Edge; other
-   browsers show everything in place) */
-@keyframes rv-in {
-  from {
-    opacity: 0;
-    translate: 0 32px;
-  }
-  to {
-    opacity: 1;
-    translate: none;
-  }
-}
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    /* Longhands on purpose: the minifier folds "animation" + "animation-timeline"
-       into one shorthand that browsers reject, and the reveal never runs. */
-    main > section:not(:first-child),
-    .grid > *,
-    .reveal {
-      animation-name: rv-in;
-      animation-timing-function: linear;
-      animation-fill-mode: both;
-      animation-timeline: view();
-      animation-range: entry 0px entry 260px;
-    }
-    .grid > :nth-child(2) {
-      animation-range: entry 30px entry 290px;
-    }
-    .grid > :nth-child(3) {
-      animation-range: entry 60px entry 320px;
-    }
-    .grid > :nth-child(4) {
-      animation-range: entry 90px entry 350px;
-    }
-  }
-}
-
-/* Yellow highlighter: sweeps across a phrase once its block (data-inview)
-   scrolls into view. Without JS or with reduced motion it's simply there.
-   Light backgrounds only: cream text on a yellow marker would be unreadable. */
-.mark {
-  padding: 0 0.1em;
-  margin: 0 -0.1em;
-  background: linear-gradient(transparent 56%, var(--marker) 56%, var(--marker) 94%, transparent 94%) no-repeat 0 0 / 100% 100%;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .js .mark {
-    background-size: 0% 100%;
-    transition: background-size 0.9s cubic-bezier(0.25, 0.8, 0.25, 1) var(--mark-delay, 0.2s);
-  }
-  .js .in-view .mark,
-  .js .mark.in-view {
-    background-size: 100% 100%;
-  }
 }
 
 /* Lists that run in order once seen (data-inview on the list, --i on each item) */
@@ -489,8 +426,15 @@ a.card:hover {
     translate: 0 18px;
   }
 }
+@media print {
+  .js [data-inview] > .step {
+    opacity: 1;
+    translate: none;
+  }
+}
 
-/* The Goal Ring drawing itself */
+/* The Goal Ring drawing itself: the arc runs round once and the dots settle
+   in, all inside 600 ms. */
 @keyframes ring-draw {
   from {
     stroke-dashoffset: 58;
@@ -500,17 +444,13 @@ a.card:hover {
   }
 }
 @keyframes dot-in {
-  0% {
+  from {
     opacity: 0;
-    transform: scale(0.2);
+    transform: scale(0.9);
   }
-  70% {
+  to {
     opacity: 1;
-    transform: scale(1.25);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
+    transform: none;
   }
 }
 .ring--draw .arc {
@@ -522,19 +462,22 @@ a.card:hover {
 }
 @media (prefers-reduced-motion: no-preference) {
   .ring--draw .arc {
-    animation: ring-draw 1.6s cubic-bezier(0.6, 0, 0.2, 1) 0.3s both;
+    animation: ring-draw 0.45s ease-out both;
+  }
+  .ring--draw circle {
+    animation: dot-in 0.2s ease-out both;
   }
   .ring--draw .d1 {
-    animation: dot-in 0.45s ease-out 1.6s both;
+    animation-delay: 0.25s;
   }
   .ring--draw .d2 {
-    animation: dot-in 0.45s ease-out 1.75s both;
+    animation-delay: 0.3s;
   }
   .ring--draw .d3 {
-    animation: dot-in 0.45s ease-out 1.9s both;
+    animation-delay: 0.35s;
   }
   .ring--draw .d4 {
-    animation: dot-in 0.6s cubic-bezier(0.3, 1.5, 0.5, 1) 2.1s both;
+    animation-delay: 0.4s;
   }
   /* Rings further down the page wait until they're seen. */
   .js .ring--draw:not(.in-view) .arc,
@@ -543,13 +486,20 @@ a.card:hover {
   }
 }
 
-/* Moving clips: the light still paints first and the loop covers it once
-   loaded. Paused or reduced motion hides the loop. */
+/* Moving clips: the still paints first and the loop covers it once loaded.
+   Paused or reduced motion hides the loop. */
 .clip-anim {
   z-index: 1;
 }
 .is-paused .clip-anim {
   display: none;
+}
+
+/* Pages with sticky anchors: a target stops just under the bar. */
+@media (max-width: 560px) {
+  :root {
+    --tabs-h: 72px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -2,7 +2,10 @@
 // Built only in the review build until Special Olympics Pakistan has
 // confirmed in writing and the adult-owned fundraiser exists (plan D2, D3).
 import Base from '../../layouts/Base.astro';
-import GoalRing from '../../components/GoalRing.astro';
+import ComingSoon from '../../components/ComingSoon.astro';
+import Gate from '../../components/Gate.astro';
+import PageHead from '../../components/PageHead.astro';
+import TrackMedia from '../../components/TrackMedia.astro';
 import { variantPaths, link, type Variant } from '../../lib/variant';
 import { copy } from '../../data/copy';
 import { site } from '../../data/site';
@@ -12,64 +15,43 @@ export function getStaticPaths() {
 }
 const { variant } = Astro.props as { variant: Variant };
 const pending = !(site.confirmed.sop && site.confirmed.donate);
+const givesBack = copy.pillars.find((pillar) => pillar.sop) ?? copy.pillars[3];
 ---
 
-<Base title="Fundraising" description={copy.fundraising.title} variant={variant} current="donate">
-  <section class="sec band-navy on-dark">
-    <div class="wrap split">
-      <div class="stack gap-m">
-        {pending && <p class="pending">Review build: this page goes live once Special Olympics Pakistan confirms in writing and the fundraiser exists (D2, D3).</p>}
-        <p class="eyebrow">Fundraising for the run</p>
-        <h1 class="h1 title">{copy.fundraising.title}</h1>
-        {site.donateUrl ? <a class="btn btn--primary self-start" href={site.donateUrl} rel="noopener">Donate</a> : <span class="btn btn--soon self-start">The fundraiser opens soon</span>}
-        <p class="small">Donations go through the fundraiser’s own page. This site never takes payments.</p>
-      </div>
-      <div class="ring">
-        <GoalRing tone="reversed" size={240} draw />
-      </div>
+<Base title="Fundraising" description={givesBack.title} variant={variant} current="donate">
+  <PageHead title={givesBack.title}>
+    {pending && <p class="pending">Review build: this page goes live once Special Olympics Pakistan confirms in writing and the fundraiser exists (D2, D3).</p>}
+  </PageHead>
+
+  <section class="sec" aria-label="Where it goes">
+    <div class="wrap stack">
+      <Gate confirmed={site.confirmed.sop && Boolean(site.event.date)} note="names Central Park: needs D2 and the park permit">
+        <p class="lead measure">{givesBack.text}</p>
+      </Gate>
+      {
+        site.donateUrl ? (
+          <a class="btn self-start" href={site.donateUrl} rel="noopener">Donate</a>
+        ) : (
+          <ComingSoon title="The fundraiser opens soon" />
+        )
+      }
+      <p class="small">Donations go through the fundraiser’s own page. This site never takes payments.</p>
     </div>
   </section>
 
-  <section class="sec">
-    <div class="wrap split">
-      <div class="stack gap-m">
-        <p class="eyebrow">The run it supports</p>
-        <h2 class="h2">Walk it. Wheel it. <span class="rasp">Run it.</span></h2>
-        <p class="lead">{copy.fiveK.launch}</p>
-        <a class="btn self-start" href={link(variant, 'the-5k')}>See the 5K</a>
+  <section class="sec band-cream" aria-labelledby="run-title">
+    <div class="wrap run">
+      <div class="stack-m run-text">
+        <h2 class="h2" id="run-title">{copy.fiveK.title[0]} {copy.fiveK.title[1]} <span class="rasp">{copy.fiveK.title[2]}</span></h2>
+        <p class="lead body">{copy.fiveK.launch}</p>
+        <a class="btn btn--outline self-start" href={link(variant, 'the-5k')}>See the 5K</a>
       </div>
-      <article class="card card--rasp">
-        <h2 class="h3">Steps that give back</h2>
-        <p>{copy.pillars[3].text}</p>
-      </article>
-    </div>
-  </section>
-
-  <section class="sec band-cream">
-    <div class="wrap stack gap-l">
-      <p class="eyebrow">Other ways to help</p>
-      <div class="grid">
-        <a class="card" href={link(variant, 'get-involved#volunteer')}><h3 class="h3">Volunteer</h3></a>
-        <a class="card" href={link(variant, 'get-involved#coach')}><h3 class="h3">Coach with us</h3><p>{copy.involved.roles.find((role) => role.id === 'coach')?.text}</p></a>
-        <a class="card" href={link(variant, 'get-involved#partner')}><h3 class="h3">Partner</h3></a>
-      </div>
+      {variant === 'photos' && <TrackMedia id="run-clip" class="run-media" />}
     </div>
   </section>
 </Base>
 
 <style>
-  .title {
-    max-width: 16ch;
-  }
-  .gap-m {
-    gap: 20px;
-  }
-  .gap-l {
-    gap: 28px;
-  }
-  .self-start {
-    align-self: flex-start;
-  }
   .pending {
     align-self: flex-start;
     padding: 8px 12px;
@@ -77,12 +59,30 @@ const pending = !(site.confirmed.sop && site.confirmed.donate);
     border-radius: 8px;
     background: var(--note-bg);
     color: var(--note-text);
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
   }
-  .ring {
+  .run {
     display: flex;
-    flex: 0 1 280px;
-    justify-content: center;
+    align-items: center;
+    gap: var(--space-64);
+  }
+  .run-text {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .run :global(.run-media) {
+    flex: 0 0 min(560px, 42%);
+  }
+  @media (max-width: 860px) {
+    .run {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-32);
+    }
+    .run :global(.run-media) {
+      flex: none;
+      width: 100%;
+    }
   }
 </style>

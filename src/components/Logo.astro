@@ -1,17 +1,19 @@
 ---
 // Horizontal lockup: ring + "Soles / with Goals" (Bricolage ExtraBold with
-// Atkinson Hyperlegible Italic), as in her logo system.
+// Atkinson Hyperlegible Italic), as in her logo system. On raspberry the arcs
+// and dots turn white and the dot turns navy.
 import GoalRing from './GoalRing.astro';
 
 interface Props {
-  dark?: boolean;
+  tone?: 'primary' | 'raspberry' | 'dark';
   size?: number;
 }
-const { dark = false, size = 40 } = Astro.props;
+const { tone = 'primary', size = 40 } = Astro.props;
+const ring = tone === 'dark' ? 'reversed' : tone;
 ---
 
-<span class:list={['logo', { 'logo--dark': dark }]}>
-  <GoalRing tone={dark ? 'reversed' : 'primary'} size={size} />
+<span class:list={['logo', `logo--${tone}`]}>
+  <GoalRing tone={ring} size={size} />
   <span class="wordmark">
     <span>Soles</span>
     <span><em>with</em> Goals</span>
@@ -25,6 +27,9 @@ const { dark = false, size = 40 } = Astro.props;
     gap: 10px;
     color: var(--navy);
   }
+  .logo--raspberry {
+    color: var(--white);
+  }
   .logo--dark {
     color: var(--cream);
   }
@@ -33,13 +38,17 @@ const { dark = false, size = 40 } = Astro.props;
     flex-direction: column;
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: 19px;
+    font-size: 18px;
     line-height: 1;
+    white-space: nowrap;
   }
   em {
     font-family: var(--font-body);
     font-weight: 400;
     color: var(--rasp);
+  }
+  .logo--raspberry em {
+    color: var(--white);
   }
   .logo--dark em {
     color: var(--rasp-on-dark);
