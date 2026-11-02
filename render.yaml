@@ -1,0 +1,15 @@
+# Render blueprint: a static site built from this repo (New > Blueprint in Render).
+# Set SITE_URL in the Render dashboard once the domain is connected (plan D7).
+services:
+  - type: web
+    name: soles-with-goals
+    runtime: static
+    branch: main
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    pullRequestPreviewsEnabled: false
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: SITE_URL
+        sync: false

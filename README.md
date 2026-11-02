@@ -55,6 +55,7 @@ every build.
 2. Set `review: false` and choose `liveVariant`.
 3. Host on any static host: build command `npm run build`, output folder `dist`, and an
    environment variable `SITE_URL` set to the domain (canonical links, the sitemap and
-   share cards need it).
+   share cards need it). On Render, `render.yaml` sets this up: New > Blueprint, pick
+   this repo, then fill in `SITE_URL`.
 4. Update the "Last updated" date on the privacy page, and keep that page matching what
    the site loads (an embedded video or analytics, for example).
