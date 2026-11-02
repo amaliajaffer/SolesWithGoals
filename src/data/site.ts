@@ -11,9 +11,9 @@ export const site = {
   // pending items outlined, and noindex. Set to false before launch.
   review: true,
 
-  // A parent's written OK for Amalia's photos (blurred versions only): note
-  // the date and who gave it here when it arrives. Set only by the site's
-  // builder once that written OK is in hand.
+  // A parent's written OK for Amalia's photos and clips as shown (her school
+  // name and race-bib name are visible): note the date and who gave it here
+  // when it arrives. Set only by the site's builder once that OK is in hand.
   photosConsent: false,
 
   // The version that goes live once review is off: 'photos' only once

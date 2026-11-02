@@ -26,7 +26,7 @@ npm run preview  # serves dist/ to check the build
 | Pages, one file each | `src/pages/[...v]/` |
 | Header, footer, Goal Ring, bib maker and other parts | `src/components/` |
 | Colours, fonts, spacing and motion | `src/styles/global.css` |
-| Amalia's photos and running loops (blurred versions only) | `media/` |
+| Amalia's photos and running loops | `media/` |
 | Share image and icons | `public/` |
 
 Anything not known yet is `null` in `site.ts` or `copy.ts`, and the page shows a
@@ -46,15 +46,16 @@ are stand-ins that need Amalia's own words before launch.
   those parts on once the confirmations are in writing.
 
 Photos of anyone under 18 go live only with a parent's or guardian's written OK. The
-photos and loops in `media/` are the blurred versions (school lettering, race-bib names
-and bystanders removed). They are copied into a build only when a page links to them, so
-the version without photos never ships them.
+photos and loops in `media/` are shown as they are, including the school name on her
+singlet and the name on her race bib, so that OK needs to cover them as shown. They are
+copied into a build only when a page links to them, so the version without photos never
+ships them.
 
 ## Going live
 
 1. Fill in `site.ts` and replace the `DRAFT(...)` lines.
 2. Set `review: false`. The site goes live without photos. To go live with Amalia's
-   photos (blurred versions only), once a parent's written OK is in, change this one line
+   photos, once a parent's written OK is in, change this one line
    in `src/data/site.ts`, noting the date and who gave the OK in the comment above it:
    `photosConsent: false,` → `photosConsent: true,`
 3. Host on any static host: build command `npm run build`, output folder `dist`, and an
