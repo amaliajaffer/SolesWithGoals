@@ -161,13 +161,28 @@ const menu: Item[] = [...main.slice(0, 4), involved, ...(showDonate ? [donate] :
     letter-spacing: 0.01em;
     text-decoration: none;
     white-space: nowrap;
-    background: linear-gradient(currentColor, currentColor) left calc(100% - 6px) / 0 2px no-repeat;
-    transition: background-size 0.25s ease;
+    position: relative;
+  }
+  /* The underline: a solid 2px rule 6px above the link's bottom edge, drawn from the left. */
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 6px;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
   }
   .nav-link:hover,
   .nav-link[aria-current='page'] {
     color: inherit;
-    background-size: 100% 2px;
+  }
+  .nav-link:hover::after,
+  .nav-link[aria-current='page']::after {
+    transform: scaleX(1);
   }
   /* Review build: the note sits under the link, since the header is at the top edge. */
   .nav-link.gate::before {
