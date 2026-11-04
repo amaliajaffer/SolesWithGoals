@@ -44,7 +44,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
           <a class="btn btn--outline-light" href={link(variant, 'the-5k')}>See the 5K</a>
         </div>
       </div>
-      {photos && <TrackMedia id="hero-clip" eager class="hero-media" />}
+      {photos && <TrackMedia id="hero-clip" shape="portrait" eager class="hero-media" />}
     </div>
   </section>
 
@@ -62,7 +62,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
     <div class="wrap stack">
       <div class="do-head">
         <h2 class="h2" id="do-title">What we do</h2>
-        <Art name="soles-stride" width={360} height={300} class="do-art" />
+        <Art name="footprint-trail" width={280} height={180} class="do-art" />
       </div>
       <div class="features">
         <article class="feature feature--navy band-navy">
@@ -179,8 +179,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
     max-width: 620px;
   }
   .hero :global(.hero-media) {
-    flex: 0 0 min(560px, 42%);
-    aspect-ratio: 14 / 9;
+    flex: 0 0 min(380px, 30%);
   }
   .statement {
     font-weight: 700;
@@ -243,11 +242,12 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
   .story-media {
     position: relative;
     display: grid;
-    flex: 0 0 min(480px, 40%);
+    flex: 0 0 min(360px, 30%);
     place-items: center;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 4 / 5;
     overflow: hidden;
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius);
+    border-top-left-radius: var(--bend);
     background: var(--aqua);
   }
   .story-media :global(img) {
@@ -269,7 +269,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
   .story-text--full .quote {
     font-size: var(--display-l);
     line-height: 0.98;
-    letter-spacing: -0.035em;
+    letter-spacing: -0.02em;
   }
   /* Without her clip the launch post fills the band at poster size. */
   .hero--poster .hero-row {
@@ -283,8 +283,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
     gap: var(--space-32);
   }
   .do-head :global(.do-art) {
-    width: clamp(160px, 16vw, 240px);
-    margin-bottom: calc(var(--space-32) * -1);
+    width: clamp(160px, 16vw, 220px);
   }
   .hero--poster .hero-lead {
     max-width: 640px;
@@ -314,7 +313,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
     }
     .hero :global(.hero-media) {
       flex: none;
-      width: 100%;
+      width: min(100%, 340px);
     }
     .story {
       flex-direction: column;
@@ -323,7 +322,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
     }
     .story-media {
       flex: none;
-      width: 100%;
+      width: min(100%, 360px);
     }
   }
   @media (max-width: 720px) {

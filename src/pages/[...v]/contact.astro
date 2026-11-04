@@ -2,7 +2,6 @@
 import Base from '../../layouts/Base.astro';
 import PageHead from '../../components/PageHead.astro';
 import ComingSoon from '../../components/ComingSoon.astro';
-import Art from '../../components/Art.astro';
 import { variantPaths, type Variant } from '../../lib/variant';
 import { copy } from '../../data/copy';
 import { site } from '../../data/site';
@@ -49,7 +48,6 @@ const waiting = ready.length < routes.length;
       {
         waiting && (
           <ComingSoon title="Our contact details are coming soon.">
-            <Art slot="art" name="finish-tape" width={480} height={240} />
           </ComingSoon>
         )
       }

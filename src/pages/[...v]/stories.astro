@@ -2,7 +2,6 @@
 import Base from '../../layouts/Base.astro';
 import PageHead from '../../components/PageHead.astro';
 import ComingSoon from '../../components/ComingSoon.astro';
-import Art from '../../components/Art.astro';
 import Closing from '../../components/Closing.astro';
 import { variantPaths, link, type Variant } from '../../lib/variant';
 import { copy } from '../../data/copy';
@@ -69,7 +68,6 @@ const description = s.intro.slice(0, s.intro.indexOf('. ') + 1);
           </div>
         ) : (
           <ComingSoon title={s.comingText}>
-            <Art slot="art" name="finish-tape" width={480} height={240} />
           </ComingSoon>
         )
       }
@@ -125,9 +123,11 @@ const description = s.intro.slice(0, s.intro.indexOf('. ') + 1);
   }
   .track {
     overflow: hidden;
-    aspect-ratio: 3 / 2;
+    max-width: 420px;
+    aspect-ratio: 4 / 5;
     margin: var(--space-16) 0;
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius);
+    border-top-left-radius: var(--bend);
     background: var(--aqua);
   }
   .track :global(img) {

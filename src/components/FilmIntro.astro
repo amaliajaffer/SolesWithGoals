@@ -1,7 +1,7 @@
 ---
 // The top of About "begins with video" (her intake). The documentary plays here
 // once site.film is set (clips after her December trip). Until then the photos
-// version shows her running clip in a track oval and the plain version says
+// version shows her running clip and the plain version says
 // the film is coming.
 // Her media lives in /media (not imported), so a build without the photos
 // version never ships it; astro.config copies only files a page links to.
@@ -50,7 +50,8 @@ const film = site.film;
     margin: 0;
     aspect-ratio: 1312 / 420;
     overflow: hidden;
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius);
+    border-top-left-radius: var(--bend);
     background: var(--navy);
   }
   .frame img,

@@ -19,12 +19,15 @@
   --note-bg: #fff1b8;
   --marker: #ffe066;
   --note-line: #e3c766;
-  --font-display: 'Bricolage Grotesque Variable', 'Atkinson Hyperlegible', system-ui, sans-serif;
-  --font-body: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --font-display: 'Archivo Variable', 'Atkinson Hyperlegible Next Variable', system-ui, sans-serif;
+  --font-body: 'Atkinson Hyperlegible Next Variable', system-ui, sans-serif;
+  --font-logo: 'Bricolage Grotesque Variable', var(--font-display);
 
   /* Shape and spacing */
   --radius: 12px;
   --radius-pill: 999px;
+  /* Photo frames: one corner bends like the track */
+  --bend: clamp(56px, 8.4vw, 120px);
   --space-4: 4px;
   --space-8: 8px;
   --space-12: 12px;
@@ -225,17 +228,17 @@ figure {
 .display-xl {
   font-size: var(--display-xl);
   line-height: 0.92;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
 }
 .display-l {
   font-size: var(--display-l);
   line-height: 0.95;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.02em;
 }
 .h2 {
   font-size: var(--h2);
   line-height: 1.02;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }
 .h3 {
   font-size: var(--h3);
@@ -253,7 +256,7 @@ figure {
   font-size: var(--quote);
   font-weight: 800;
   line-height: 1.02;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }
 .lead {
   font-size: 21px;

@@ -1,7 +1,5 @@
 ---
-// The cream header at the top of an inner page: label, title, and a lead line,
-// with her track-corner lanes clipped at the right edge.
-import Art from './Art.astro';
+// The cream header at the top of an inner page: label, title, and a lead line.
 interface Props {
   eyebrow?: string;
   title: string;
@@ -12,7 +10,6 @@ const { eyebrow, title, lead, flush = false } = Astro.props;
 ---
 
 <header class:list={['page-head', 'band-cream', { 'page-head--flush': flush }]}>
-  <Art name="lane-corner" width={480} height={320} eager class="corner" />
   <div class="wrap stack-m">
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h1 class="display-l">{title}</h1>
@@ -26,31 +23,6 @@ const { eyebrow, title, lead, flush = false } = Astro.props;
     position: relative;
     overflow: hidden;
     padding: clamp(48px, 6.67vw, 96px) 0 clamp(48px, 4.45vw, 64px);
-  }
-  .page-head {
-    --corner: clamp(280px, 33vw, 480px);
-  }
-  .page-head :global(.corner) {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: var(--corner);
-  }
-  .wrap {
-    position: relative;
-    z-index: 1;
-  }
-  /* Keep the title and lead clear of the lanes (they fill the right ~60 % of
-     the art); the sub-tabs below stay full width. */
-  @media (min-width: 721px) {
-    .wrap > :global(:is(h1, p)) {
-      max-width: calc(100% - var(--corner) * 0.62);
-    }
-  }
-  @media (max-width: 720px) {
-    .page-head :global(.corner) {
-      display: none;
-    }
   }
   .page-head--flush {
     padding-bottom: 0;

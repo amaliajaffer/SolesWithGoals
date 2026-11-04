@@ -1,5 +1,5 @@
 ---
-// Her running clip in a running-track oval (or a portrait frame): her own
+// Her running clip in a landscape or portrait frame with one track-bend corner: her own
 // slowed-down loop over its still, with a Pause button. Paused or reduced
 // motion shows the still. Used only in the version with her photos.
 // Her media lives in /media (not imported), so a build without the photos
@@ -8,11 +8,11 @@ import PauseButton from './PauseButton.astro';
 
 interface Props {
   id: string;
-  shape?: 'oval' | 'portrait';
+  shape?: 'landscape' | 'portrait';
   eager?: boolean;
   class?: string;
 }
-const { id, shape = 'oval', eager = false, class: className } = Astro.props;
+const { id, shape = 'landscape', eager = false, class: className } = Astro.props;
 ---
 
 <figure class:list={['media', `media--${shape}`, className]} id={id}>
@@ -32,15 +32,15 @@ const { id, shape = 'oval', eager = false, class: className } = Astro.props;
     justify-content: center;
     width: 100%;
     overflow: hidden;
+    border-radius: var(--radius) var(--radius) var(--radius) var(--radius);
+    border-top-left-radius: var(--bend);
     background: var(--navy);
   }
-  .media--oval {
+  .media--landscape {
     aspect-ratio: 14 / 9;
-    border-radius: var(--radius-pill);
   }
   .media--portrait {
     aspect-ratio: 21 / 26;
-    border-radius: var(--radius);
   }
   .media img,
   .media :global(img) {
