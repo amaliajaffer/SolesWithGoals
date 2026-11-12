@@ -60,6 +60,7 @@ const waiting = ready.length < routes.length;
       }
       <p class="tags">
         {site.socials.map((social) => <a href={social.url} rel="noopener">{social.label}</a>)}
+        {site.socials.length === 0 && <span>Social links: coming soon</span>}
         <span>{site.hashtag}</span>
       </p>
     </div>

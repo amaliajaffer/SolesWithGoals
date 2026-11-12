@@ -8,13 +8,18 @@ donations (once they open) link out to the fundraiser's own page.
 
 ## Run it
 
-Needs Node 22.12 or newer (see `.nvmrc`).
+Needs Node 22.19 or newer (see `.nvmrc`).
 
 ```bash
 npm install
 npm run dev      # http://localhost:4321, reloads as you edit
 npm run build    # writes the site to dist/
 npm run preview  # serves dist/ to check the build
+npm run typecheck  # astro check
+npm run lint       # source check + astro check, hints included
+npm test           # builds, then checks dist/ (no photos, no review version, no dead links)
+npm run dev:review    # local review only: both versions, with her photos
+npm run build:review  # same, for a local build (never use on a public host)
 ```
 
 ## Where things live
@@ -30,20 +35,22 @@ npm run preview  # serves dist/ to check the build
 | Share image and icons | `public/` |
 
 Anything not known yet is `null` in `site.ts` or `copy.ts`, and the page shows a
-"coming soon" state until it's filled in. Lines wrapped in `DRAFT(...)` in `copy.ts`
-are stand-ins that need Amalia's own words before launch.
+"Coming soon" state until it's filled in.
 
 ## Review build and live build
 
-`review` in `src/data/site.ts` switches between them.
+The normal build is the **live build**: `npm run build` and Render both make it.
+The review build exists only on a computer, and only on request (`npm run dev:review`
+or `npm run build:review`, which set `REVIEW_BUILD=1`). It refuses to run on Render.
 
-- **Review build** (`review: true`): every page is built twice, without photos at `/`
+- **Live build** (the default): one version at the root, without photos, and anything
+  not yet confirmed is left out. No `/with-photos/`, no `media/` folder in `dist/`.
+  `confirmed.sop` and `confirmed.donate` turn those parts on once the confirmations
+  are in writing.
+- **Review build** (`REVIEW_BUILD=1`): every page is built twice, without photos at `/`
   and with Amalia's photos at `/with-photos/`, with a switch at the bottom of each page.
   Anything waiting on a written confirmation (Special Olympics Pakistan, Donate,
   Fundraising) shows with a yellow note. Search engines are kept out.
-- **Live build** (`review: false`): only one version is built, at the root, and
-  anything not yet confirmed is left out. `confirmed.sop` and `confirmed.donate` turn
-  those parts on once the confirmations are in writing.
 
 Photos of anyone under 18 go live only with a parent's or guardian's written OK. The
 photos and loops in `media/` are shown as they are, including the school name on her
@@ -53,8 +60,8 @@ ships them.
 
 ## Going live
 
-1. Fill in `site.ts` and replace the `DRAFT(...)` lines.
-2. Set `review: false`. The site goes live without photos. To go live with Amalia's
+1. Fill in `site.ts` (each form link, the email, socials and the donate link turn their own "Coming soon" spot into the real thing).
+2. The site goes live without photos (nothing to switch). To go live with Amalia's
    photos, once a parent's written OK is in, change this one line
    in `src/data/site.ts`, noting the date and who gave the OK in the comment above it:
    `photosConsent: false,` → `photosConsent: true,`

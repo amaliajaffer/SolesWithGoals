@@ -11,7 +11,7 @@ import { variantPaths, link, type Variant } from '../../lib/variant';
 import { countLabel } from '../../lib/count';
 import { wideOnPhone } from '../../lib/pairs';
 import { copy } from '../../data/copy';
-import { site, showPending } from '../../data/site';
+import { site, showPending, hasSignupRoute } from '../../data/site';
 
 export function getStaticPaths() {
   return variantPaths();
@@ -107,7 +107,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
   <section class="sec band-cream" aria-labelledby="help-title">
     <div class="wrap stack">
       <h2 class="h2" id="help-title">{copy.involved.title}</h2>
-      <p class="body measure">{copy.involved.formNote}</p>
+      {hasSignupRoute && <p class="body measure">{copy.involved.formNote}</p>}
       <div class="bibs">
         {
           copy.involved.roles.map((role, index) => (

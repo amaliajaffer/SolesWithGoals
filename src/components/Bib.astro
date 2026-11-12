@@ -1,6 +1,6 @@
 ---
 // A way to help, drawn as her "My goal" race bib. Until its form exists, the
-// band says "Opening soon" and the bib has no button. "Run with us" is the
+// band says "Coming soon" and the bib has no button. "Run with us" is the
 // raspberry bib.
 interface Props {
   title: string;
@@ -20,7 +20,7 @@ const external = href ? /^https?:/.test(href) : false;
 <article class:list={['bib', { 'bib--run': run, 'bib--wide': wide, 'bib--span3': span?.three, 'bib--span2': span?.two }]} id={id}>
   <div class="band">
     <span class="mark"><span class="pin" aria-hidden="true"></span>My goal</span>
-    {href ? <span class="pin" aria-hidden="true"></span> : <span class="status">Opening soon</span>}
+    {href ? <span class="pin" aria-hidden="true"></span> : <span class="status">Coming soon</span>}
   </div>
   <div class="bib-body">
     <h3 class="h3">{title}</h3>

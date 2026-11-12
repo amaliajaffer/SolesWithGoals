@@ -13,8 +13,13 @@ const site = process.env.SITE_URL || undefined;
 // and outside the bundler, so they only reach a build that links to them: the
 // version with her photos. The plain version never ships them.
 const MEDIA_DIR = fileURLToPath(new URL('./media/', import.meta.url));
+/** @type {Record<string, string>} */
 const TYPES = { '.jpg': 'image/jpeg', '.webp': 'image/webp' };
 
+/**
+ * @param {string} dir
+ * @returns {string[]}
+ */
 function htmlFiles(dir) {
   return readdirSync(dir).flatMap((name) => {
     const p = join(dir, name);

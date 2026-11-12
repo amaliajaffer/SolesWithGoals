@@ -4,7 +4,7 @@
 import Base from '../../layouts/Base.astro';
 import PageHead from '../../components/PageHead.astro';
 import { variantPaths, type Variant } from '../../lib/variant';
-import { site } from '../../data/site';
+import { site, hasContactRoute, hasSignupRoute } from '../../data/site';
 
 export function getStaticPaths() {
   return variantPaths();
@@ -28,7 +28,13 @@ const filmHost = site.film ? new URL(site.film.embedUrl).hostname.replace(/^www\
       </div>
       <div class="stack">
         <h2 class="h3">What we collect</h2>
-        <p>Nothing on this site itself. When you sign up, the button takes you to a Google Form in Amalia’s account, and Google’s privacy policy covers what you enter there. If you’re under 18, the form asks a parent or guardian to agree first.</p>
+        {
+          hasSignupRoute ? (
+            <p>Nothing on this site itself. When you sign up, the button takes you to a Google Form in Amalia’s account, and Google’s privacy policy covers what you enter there. If you’re under 18, the form asks a parent or guardian to agree first.</p>
+          ) : (
+            <p>Nothing on this site itself. Sign-ups are coming soon.</p>
+          )
+        }
       </div>
       <div class="stack">
         <h2 class="h3">What the site loads</h2>
@@ -41,7 +47,7 @@ const filmHost = site.film ? new URL(site.film.embedUrl).hostname.replace(/^www\
       </div>
       <div class="stack">
         <h2 class="h3">Photos and stories</h2>
-        <p>We only share photos and stories with written permission, from a parent or guardian for anyone under 18. If you’d like a photo or story taken down, just ask using the contact details above and we’ll remove it.</p>
+        <p>We only share photos and stories with written permission, from a parent or guardian for anyone under 18. If you’d like a photo or story taken down, just ask{hasContactRoute ? ' using the contact details above' : ''} and we’ll remove it.</p>
       </div>
       <p class="small">Last updated 29 October 2026.</p>
     </div>

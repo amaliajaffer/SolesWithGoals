@@ -1,10 +1,6 @@
 // Amalia's words, from her brand pack, logo system, launch post and her
 // website doc, edited for a friendly tone with no new facts or claims. Her
 // essay and its quote are signed with her name, so they stay word for word.
-//
-// DRAFT marks stand-in lines that still need Amalia's own words before launch.
-// They render as normal.
-const DRAFT = <T,>(text: T) => text;
 
 export const copy = {
   essence: 'Every pace counts.',
@@ -27,10 +23,10 @@ export const copy = {
   // Special Olympics Pakistan line is an affiliation and a statistic, so it waits
   // for SOP's written OK like every other SOP claim.
   whoWeAre: [
-    { text: 'The Starting Line was founded by Amalia Jaffer, a high school varsity runner living in New York. She’s of Pakistani descent and visits her relatives in Karachi every year.' },
+    { text: 'Soles with Goals was founded by Amalia Jaffer, a high school varsity runner living in New York. She’s of Pakistani descent and visits her relatives in Karachi every year.' },
     { text: 'Running has changed her life, teaching her discipline, resilience and perseverance through hard moments on and off the track, and it inspired her to start a running community of her own. She first planned to base it in New York, until she realized New York already had plenty of running clubs anyone could join, while Karachi had almost none for girls.' },
     { text: 'Through her work with Special Olympics Pakistan, she learned from its directors that the number of female athletes had dropped sharply after Covid-19.', sop: true },
-    { text: 'As a proud feminist, Amalia wanted to understand what was keeping girls off the track and find a solution. Months of research led to the launch of The Starting Line.' },
+    { text: 'As a proud feminist, Amalia wanted to understand what was keeping girls off the track and find a solution. Months of research led to the launch of Soles with Goals.' },
   ],
   name: [
     { word: 'Soles', text: 'the feet that carry us, and the souls behind them.' },
@@ -85,24 +81,24 @@ export const copy = {
     vision:
       'We picture a Pakistan where girls of every ability can start running and take in everything it teaches: resilience, strength, leadership and the nerve to start something new.',
     mission:
-      'The Starting Line brings young Pakistani girls with and without intellectual disabilities together as one community, where everyone can enjoy running at their own level. Through hands-on modules, we show how running can change your life, building the discipline, perseverance and confidence it takes to lead and to start a business. Running is a girl’s starting line, and everything she learns here is meant to carry her through life.',
+      'Soles with Goals brings young Pakistani girls with and without intellectual disabilities together as one community, where everyone can enjoy running at their own level. Through hands-on modules, we show how running can change your life, building the discipline, perseverance and confidence it takes to lead and to start a business. Running is a girl’s starting line, and everything she learns here is meant to carry her through life.',
     principles: [
       {
         title: 'We start with the barriers, not the program',
         parts: [
           { text: 'Before we built anything, we looked into why female athletes at Special Olympics Pakistan take part less, and what stops women in Pakistan from running.', sop: true },
-          { text: 'The biggest barriers are what women can wear, where they’re allowed to go and who they can be with, often decided by what their families and communities say. The Starting Line is built around those answers, not around a typical New York running club.' },
+          { text: 'The biggest barriers are what women can wear, where they’re allowed to go and who they can be with, often decided by what their families and communities say. Soles with Goals is built around those answers, not around a typical New York running club.' },
         ],
       },
       { title: 'Unified means one team', parts: [{ text: 'Young women with intellectual disabilities aren’t put in a separate group with separate coaching. Everyone runs the same route, joins the same modules and is on the same roster, with support whenever it’s needed.' }] },
       { title: 'Women lead everything', parts: [{ text: 'Our coaches, teachers and organizers are all women. That’s how families say yes, and how girls feel safe enough to keep coming back.' }] },
       { title: 'Running is the Starting Line, not the finish', parts: [{ text: 'Five modules run alongside training.' }], modulesLink: true },
-      { title: 'Free, always', parts: [{ text: 'The Starting Line is open to everyone, and that includes money. There are no fees, ever.' }] },
+      { title: 'Free, always', parts: [{ text: 'Soles with Goals is open to everyone, and that includes money. There are no fees, ever.' }] },
       { title: 'Built to outlast us', parts: [{ text: 'Everything we make, from modules and session plans to downloadable resources, is designed so local coaches and partner organizations can pick it up and run with it.' }] },
       {
         title: 'Rooted in Pakistan',
         sop: true,
-        parts: [{ text: 'We partner with organizations already working in Pakistan, like Special Olympics Pakistan. The Starting Line has a formal partnership with Special Olympics Pakistan and runs alongside them, and we’d love to welcome more partners in the future.' }],
+        parts: [{ text: 'We partner with organizations already working in Pakistan, like Special Olympics Pakistan. Soles with Goals has a formal partnership with Special Olympics Pakistan and runs alongside them, and we’d love to welcome more partners in the future.' }],
       },
     ],
     sessionsTitle: 'Every week, all our athletes meet and train together.',
@@ -115,7 +111,7 @@ export const copy = {
       'Module slides are downloadable, and lessons will be recorded, so any participant can catch up from home when she needs to.',
       'It’s free, there are no tryouts, and any girl who shows up is part of the team.',
     ],
-    whoFor: 'The Starting Line is for young Pakistani women aged 12 to 25 who’ve never had a place to run.',
+    whoFor: 'Soles with Goals is for young Pakistani women aged 12 to 25 who’ve never had a place to run.',
     whoForMore:
       'Girls with intellectual disabilities, who are so often left out of sport, take part as full members of the same team. The program is designed with families’ concerns in mind: it asks for family consent, and it’s modest, free and led by women.',
   },
@@ -145,7 +141,6 @@ export const copy = {
     title: 'The first story is still being written.',
     intro:
       'Soon this page will share stories from the girls who run with us, in their own words and with their and their families’ permission. Until then, here’s why we run.',
-    whoTitle: DRAFT('Kept off the track by rules nobody wrote down.'),
     who: [
       'Girls in Pakistan are kept off the track by unwritten rules about where they can go, what they can wear and who they can be with. Girls with intellectual disabilities face all of that and more.',
       'We don’t think any of this is about ability. It’s about access, and access is something we can build.',
@@ -160,7 +155,6 @@ export const copy = {
 
   involved: {
     title: 'Any girl who shows up is part of the team.',
-    sub: DRAFT('Come run with us, coach with us or partner with us.'),
     formNote:
       'Our sign-up forms are Google Forms in Amalia’s account. If you’re under 18, a parent or guardian needs to fill in or sign the consent part. Please leave out health details and anyone else’s personal details.',
     roles: [
@@ -170,11 +164,6 @@ export const copy = {
       { id: 'coach', title: 'Coach with us', text: 'All our coaches, teachers and organizers are women.' as string | null, form: 'coach' },
       { id: 'partner', title: 'Partner', text: null as string | null, form: 'partner' },
     ],
-  },
-
-  fundraising: {
-    title: DRAFT('Free, always. Your gift helps keep it that way.'),
-    updates: DRAFT('Get our updates'),
   },
 
   essay: {
@@ -199,6 +188,6 @@ export const copy = {
     ],
     closing: ['Running doesn’t take me away from my life.', 'It helps me live it.'],
     quote: 'Running doesn’t take me away from my life. It helps me live it.',
-    byline: 'Amalia Jaffer, founder of The Starting Line',
+    byline: 'Amalia Jaffer, founder of Soles with Goals',
   },
 };

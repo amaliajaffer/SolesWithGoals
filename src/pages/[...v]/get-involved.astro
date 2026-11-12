@@ -7,7 +7,7 @@ import PageHead from '../../components/PageHead.astro';
 import { variantPaths, link, type Variant } from '../../lib/variant';
 import { copy } from '../../data/copy';
 import { wideOnPhone } from '../../lib/pairs';
-import { site, showPending } from '../../data/site';
+import { site, showPending, hasSignupRoute } from '../../data/site';
 
 export function getStaticPaths() {
   return variantPaths();
@@ -23,7 +23,7 @@ const span = { three: bibCount % 3 === 2, two: bibCount % 2 === 1 };
 ---
 
 <Base title="Get involved" description={copy.involved.title} variant={variant} current="involved">
-  <PageHead title={copy.involved.title} lead={copy.involved.formNote} />
+  <PageHead title={copy.involved.title} lead={hasSignupRoute ? copy.involved.formNote : null} />
 
   <section class="sec" aria-label="Ways to help">
     <div class="wrap bibs">

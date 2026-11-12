@@ -53,7 +53,7 @@ const tabs = [
                 <div class="stack-s">
                   <p class="body">
                     {principle.parts.map((part) =>
-                      part.sop ? (
+                      'sop' in part && part.sop ? (
                         <Gate confirmed={site.confirmed.sop} note="needs SOP’s written OK (D2)" inline>
                           {part.text}{' '}
                         </Gate>

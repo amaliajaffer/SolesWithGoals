@@ -3,13 +3,25 @@
 
 export type Variant = 'plain' | 'photos';
 
+function reviewRequested(): boolean {
+  const env = import.meta.env as Record<string, string | undefined>;
+  if (env.REVIEW_BUILD !== '1') return false;
+  if (env.RENDER) {
+    throw new Error('REVIEW_BUILD=1 must never run on Render: the review build contains the with-photos version.');
+  }
+  return true;
+}
+
 export const site = {
   name: 'Soles with Goals',
   hashtag: '#SolesWithGoals',
 
   // Review build: both versions (/ and /with-photos/), the review bar,
-  // pending items outlined, and noindex. Set to false before launch.
-  review: true,
+  // pending items outlined, and noindex. OFF by default, so every normal build
+  // (npm run build, Render) is the launch build and never contains /with-photos/
+  // or her photos. It turns on only for a local review: `npm run dev:review` or
+  // `npm run build:review` (they set REVIEW_BUILD=1). It never runs on Render.
+  review: reviewRequested(),
 
   // A parent's written OK for Amalia's photos and clips as shown (her school
   // name and race-bib name are visible): note the date and who gave it here
@@ -22,6 +34,13 @@ export const site = {
     return this.photosConsent ? 'photos' : 'plain';
   },
 
+  // Contact and sign-up: each stays null until it exists. While it is null the
+  // site shows a plain "Coming soon" there (no dead link, no button). Filling
+  // one in here turns that one on everywhere it appears.
+  //   email   -> "Email us" on Contact, the privacy page, the Contact route cards
+  //   forms.* -> the "Open the form" button on that Get involved bib and Contact card
+  //   socials -> links in the footer and on Contact
+  //   donateUrl / event.registerUrl -> Donate / Register (also need confirmed.* below)
   email: null as string | null,
   socials: [] as { label: string; url: string }[],
 
@@ -52,6 +71,10 @@ export const site = {
 
   film: null as null | { title: string; embedUrl: string; note: string },
 };
+
+// True once at least one sign-up form or the project email is set.
+export const hasSignupRoute = Object.values(site.forms).some(Boolean);
+export const hasContactRoute = hasSignupRoute || Boolean(site.email);
 
 // Show a pending item: always once confirmed, and outlined in the review build.
 export const showPending = (confirmed: boolean) => confirmed || site.review;

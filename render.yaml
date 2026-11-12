@@ -8,6 +8,25 @@ services:
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
     pullRequestPreviewsEnabled: false
+    # Response headers for every page. No full Content-Security-Policy on purpose:
+    # the pages carry inline scripts, and the film embed (youtube-nocookie.com or
+    # Vimeo) may be added later. frame-ancestors only stops other sites framing us.
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Content-Security-Policy
+        value: frame-ancestors 'none'
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=()
     envVars:
       - key: NODE_VERSION
         value: "22"
