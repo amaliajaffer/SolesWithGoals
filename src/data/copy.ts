@@ -18,13 +18,13 @@ export const copy = {
   missionSop:
     ', and where every step helps athletes with intellectual disabilities through Special Olympics Pakistan',
   origin:
-    'Soles with Goals was started by a New York runner who knows that not every challenge shows on the outside. She runs for the neurodivergent community, and she wanted a race where nobody has to explain themselves to belong.',
+    'Soles with Goals was started by a runner who knows that not every challenge shows on the outside. She runs for the neurodivergent community, and she wanted a race where nobody has to explain themselves to belong.',
   // Her "Who we are" paragraph (website doc), reworded to match the rest. The
   // Special Olympics Pakistan line is an affiliation and a statistic, so it waits
   // for SOP's written OK like every other SOP claim.
   whoWeAre: [
-    { text: 'Soles with Goals was founded by Amalia Jaffer, a high school varsity runner living in New York. She’s of Pakistani descent and visits her relatives in Karachi every year.' },
-    { text: 'Running has changed her life, teaching her discipline, resilience and perseverance through hard moments on and off the track, and it inspired her to start a running community of her own. She first planned to base it in New York, until she realized New York already had plenty of running clubs anyone could join, while Karachi had almost none for girls.' },
+    { text: 'Soles with Goals was founded by Amalia, a runner of Pakistani descent who visits her relatives in Karachi every year.' },
+    { text: 'Running has changed her life, teaching her discipline, resilience and perseverance through hard moments on and off the track, and it inspired her to start a running community of her own. She first planned to base it at home, until she realized her home city already had plenty of running clubs anyone could join, while Karachi had almost none for girls.' },
     { text: 'Through her work with Special Olympics Pakistan, she learned from its directors that the number of female athletes had dropped sharply after Covid-19.', sop: true },
     { text: 'As a proud feminist, Amalia wanted to understand what was keeping girls off the track and find a solution. Months of research led to the launch of Soles with Goals.' },
   ],
@@ -87,7 +87,7 @@ export const copy = {
         title: 'We start with the barriers, not the program',
         parts: [
           { text: 'Before we built anything, we looked into why female athletes at Special Olympics Pakistan take part less, and what stops women in Pakistan from running.', sop: true },
-          { text: 'The biggest barriers are what women can wear, where they’re allowed to go and who they can be with, often decided by what their families and communities say. Soles with Goals is built around those answers, not around a typical New York running club.' },
+          { text: 'The biggest barriers are what women can wear, where they’re allowed to go and who they can be with, often decided by what their families and communities say. Soles with Goals is built around those answers, not around a typical running club.' },
         ],
       },
       { title: 'Unified means one team', parts: [{ text: 'Young women with intellectual disabilities aren’t put in a separate group with separate coaching. Everyone runs the same route, joins the same modules and is on the same roster, with support whenever it’s needed.' }] },
@@ -188,6 +188,6 @@ export const copy = {
     ],
     closing: ['Running doesn’t take me away from my life.', 'It helps me live it.'],
     quote: 'Running doesn’t take me away from my life. It helps me live it.',
-    byline: 'Amalia Jaffer, founder of Soles with Goals',
+    byline: 'Amalia, founder of Soles with Goals',
   },
 };
