@@ -18,9 +18,9 @@ const [walk, wheel, run] = copy.fiveK.title;
 ---
 
 <Tag class:list={['beats', 'display-xl', { 'beats--spaced': spaced, 'beats--still': still, 'beats--poster': poster }]} id={id}>
-  <span class="beat">{walk}</span>
-  <span class="beat mask"><span class="rise" style="--d: 0ms">{wheel}</span></span>
-  <span class="beat mask navy"><span class="rise" style="--d: 90ms">{run}</span></span>
+  <span class="beat walk">{walk}</span>
+  <span class="beat mask wheel"><span class="rise" style="--d: 0ms">{wheel}</span></span>
+  <span class="beat mask run"><span class="rise" style="--d: 90ms">{run}</span></span>
 </Tag>
 
 <style>
@@ -44,7 +44,24 @@ const [walk, wheel, run] = copy.fiveK.title;
   .rise {
     display: block;
   }
-  .navy {
+  /* Each line has its own voice: three faces from the site's set, three
+     colours from her palette. All sit on raspberry at display size
+     (white 4.9:1, aqua 3.9:1, navy 3.3:1; large text needs 3:1). */
+  .walk {
+    font-family: var(--font-display);
+    font-weight: 900;
+    color: var(--white);
+  }
+  .wheel {
+    font-family: var(--font-logo);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--aqua);
+  }
+  .run {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-weight: 800;
     color: var(--navy);
   }
   /* Sized by width, and by height too so a short landscape phone still shows

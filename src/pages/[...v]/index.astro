@@ -38,7 +38,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
     <div class="wrap hero-row">
       <div class="hero-text stack">
         <Beats id="hero-title" poster={!photos} />
-        <p class="lead hero-lead">{copy.essence} {copy.introLine}</p>
+        <p class="lead hero-lead"><span class="lead-essence">{copy.essence}</span> <span class="lead-intro">{copy.introLine}</span></p>
         <div class="row">
           <a class="btn btn--on-rasp" href={link(variant, 'get-involved')}>Get involved</a>
           <a class="btn btn--outline-light" href={link(variant, 'the-5k')}>See the 5K</a>
@@ -48,7 +48,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
     </div>
   </section>
 
-  <section class="sec" aria-labelledby="who-title">
+  <section class="sec band-aqua-soft" aria-labelledby="who-title">
     <div class="wrap stack">
       <h2 class="h3" id="who-title">Who we’re running for</h2>
       <div class="problem">
@@ -79,7 +79,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
     </div>
   </section>
 
-  <section class="sec" aria-labelledby="pillars-title">
+  <section class="sec band-blush" aria-labelledby="pillars-title">
     <div class="wrap">
       <h2 class="sr-only" id="pillars-title">{countLabel(pillarCount, 'pillars')}</h2>
       <div class="pillars">
@@ -121,7 +121,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
     </div>
   </section>
 
-  <section class="sec" aria-labelledby="why-title">
+  <section class="sec band-sky" aria-labelledby="why-title">
     <div class="wrap stack">
       <div class="story">
         {
@@ -177,6 +177,16 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
   }
   .hero-lead {
     max-width: 620px;
+  }
+  /* The tagline in the logo face, the line after it in the display face. */
+  .lead-essence {
+    font-family: var(--font-logo);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .lead-intro {
+    font-family: var(--font-display);
+    font-weight: 450;
   }
   .hero :global(.hero-media) {
     flex: 0 0 min(380px, 30%);

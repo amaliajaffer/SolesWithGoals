@@ -5,11 +5,13 @@ interface Props {
   title: string;
   lead?: string | null;
   flush?: boolean;
+  // rasp: the raspberry band from Home's hero (About opens with it).
+  tone?: 'cream' | 'rasp';
 }
-const { eyebrow, title, lead, flush = false } = Astro.props;
+const { eyebrow, title, lead, flush = false, tone = 'cream' } = Astro.props;
 ---
 
-<header class:list={['page-head', 'band-cream', { 'page-head--flush': flush }]}>
+<header class:list={['page-head', tone === 'rasp' ? 'band-rasp' : 'band-cream', { 'page-head--flush': flush }]}>
   <div class="wrap stack-m">
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h1 class="display-l">{title}</h1>

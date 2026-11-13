@@ -188,6 +188,17 @@ figure {
 .band-cream {
   background: var(--cream);
 }
+/* Light tints of her aqua, raspberry and navy, for sections that were plain
+   white: still clean, with more colour. Navy and #B00B4B text keep AA on all three. */
+.band-aqua-soft {
+  background: #e4fbfc;
+}
+.band-blush {
+  background: #fdedf3;
+}
+.band-sky {
+  background: var(--navy-100);
+}
 .band-rasp {
   background: var(--rasp);
   color: var(--white);
