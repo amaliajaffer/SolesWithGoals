@@ -7,6 +7,7 @@ import Bib from '../../components/Bib.astro';
 import ComingSoon from '../../components/ComingSoon.astro';
 import Closing from '../../components/Closing.astro';
 import Art from '../../components/Art.astro';
+import Ribbon from '../../components/Ribbon.astro';
 import { variantPaths, link, type Variant } from '../../lib/variant';
 import { countLabel } from '../../lib/count';
 import { wideOnPhone } from '../../lib/pairs';
@@ -38,17 +39,19 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
     <div class="wrap hero-row">
       <div class="hero-text stack">
         <Beats id="hero-title" poster={!photos} />
-        <p class="lead hero-lead"><span class="lead-essence">{copy.essence}</span> <span class="lead-intro">{copy.introLine}</span></p>
+        <p class="lead hero-lead"><span class="lead-essence">{copy.essence}</span> {copy.introLine}</p>
         <div class="row">
           <a class="btn btn--on-rasp" href={link(variant, 'get-involved')}>Get involved</a>
           <a class="btn btn--outline-light" href={link(variant, 'the-5k')}>See the 5K</a>
         </div>
       </div>
-      {photos && <TrackMedia id="hero-clip" shape="portrait" eager class="hero-media" />}
+      {photos && <TrackMedia id="hero-clip" shape="portrait" tone="duo" eager class="hero-media" />}
     </div>
   </section>
 
-  <section class="sec band-aqua-soft" aria-labelledby="who-title">
+  <Ribbon />
+
+  <section class="sec band-navy who" aria-labelledby="who-title">
     <div class="wrap stack">
       <h2 class="h3" id="who-title">Who we’re running for</h2>
       <div class="problem">
@@ -58,7 +61,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
     </div>
   </section>
 
-  <section class="sec band-cream" aria-labelledby="do-title">
+  <section class="sec" aria-labelledby="do-title">
     <div class="wrap stack">
       <div class="do-head">
         <h2 class="h2" id="do-title">What we do</h2>
@@ -79,7 +82,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
     </div>
   </section>
 
-  <section class="sec band-blush" aria-labelledby="pillars-title">
+  <section class="sec band-cream" aria-labelledby="pillars-title">
     <div class="wrap">
       <h2 class="sr-only" id="pillars-title">{countLabel(pillarCount, 'pillars')}</h2>
       <div class="pillars">
@@ -104,7 +107,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
     </div>
   </section>
 
-  <section class="sec band-cream" aria-labelledby="help-title">
+  <section class="sec" aria-labelledby="help-title">
     <div class="wrap stack">
       <h2 class="h2" id="help-title">{copy.involved.title}</h2>
       {hasSignupRoute && <p class="body measure">{copy.involved.formNote}</p>}
@@ -121,7 +124,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
     </div>
   </section>
 
-  <section class="sec band-sky" aria-labelledby="why-title">
+  <section class="sec band-cream" aria-labelledby="why-title">
     <div class="wrap stack">
       <div class="story">
         {
@@ -178,15 +181,8 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
   .hero-lead {
     max-width: 620px;
   }
-  /* The tagline in the logo face, the line after it in the display face. */
   .lead-essence {
-    font-family: var(--font-logo);
     font-weight: 700;
-    letter-spacing: -0.01em;
-  }
-  .lead-intro {
-    font-family: var(--font-display);
-    font-weight: 450;
   }
   .hero :global(.hero-media) {
     flex: 0 0 min(380px, 30%);
@@ -194,6 +190,7 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
   .statement {
     font-weight: 700;
   }
+
   .problem {
     display: grid;
     grid-template-columns: 1fr 1fr;

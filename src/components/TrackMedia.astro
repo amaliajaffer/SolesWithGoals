@@ -9,13 +9,15 @@ import PauseButton from './PauseButton.astro';
 interface Props {
   id: string;
   shape?: 'landscape' | 'portrait';
+  // duo: navy-to-white duotone, so the clip belongs to the raspberry band it sits on.
+  tone?: 'colour' | 'duo';
   eager?: boolean;
   class?: string;
 }
-const { id, shape = 'landscape', eager = false, class: className } = Astro.props;
+const { id, shape = 'landscape', tone = 'colour', eager = false, class: className } = Astro.props;
 ---
 
-<figure class:list={['media', `media--${shape}`, className]} id={id}>
+<figure class:list={['media', `media--${shape}`, { 'media--duo': tone === 'duo' }, className]} id={id}>
         <picture>
           <source media="(prefers-reduced-motion: reduce)" srcset="/media/run-still.jpg" />
           <img class="clip-anim" src="/media/run-loop.webp" width="540" height="720" alt="" decoding="async" loading={eager ? 'eager' : 'lazy'} fetchpriority="low" />
@@ -50,6 +52,25 @@ const { id, shape = 'landscape', eager = false, class: className } = Astro.props
     height: 100%;
     object-fit: cover;
     object-position: 50% 35%;
+  }
+  /* Duotone: grey footage with navy lifted into the shadows. Her running
+     stays readable; the park greens turn into the brand's navy and white. */
+  .media--duo {
+    isolation: isolate;
+    background: var(--white);
+  }
+  .media--duo img {
+    filter: grayscale(1) contrast(1.3) brightness(1.1);
+    mix-blend-mode: multiply;
+  }
+  .media--duo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--navy);
+    mix-blend-mode: lighten;
+    pointer-events: none;
   }
   .media :global(.media-pause) {
     position: absolute;

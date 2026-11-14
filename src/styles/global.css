@@ -19,7 +19,7 @@
   --note-bg: #fff1b8;
   --marker: #ffe066;
   --note-line: #e3c766;
-  --font-display: 'Archivo Variable', 'Atkinson Hyperlegible Next Variable', system-ui, sans-serif;
+  --font-display: 'Big Shoulders Variable', 'Atkinson Hyperlegible Next Variable', system-ui, sans-serif;
   --font-body: 'Atkinson Hyperlegible Next Variable', system-ui, sans-serif;
   --font-logo: 'Bricolage Grotesque Variable', var(--font-display);
 
@@ -188,17 +188,6 @@ figure {
 .band-cream {
   background: var(--cream);
 }
-/* Light tints of her aqua, raspberry and navy, for sections that were plain
-   white: still clean, with more colour. Navy and #B00B4B text keep AA on all three. */
-.band-aqua-soft {
-  background: #e4fbfc;
-}
-.band-blush {
-  background: #fdedf3;
-}
-.band-sky {
-  background: var(--navy-100);
-}
 .band-rasp {
   background: var(--rasp);
   color: var(--white);
@@ -222,11 +211,11 @@ figure {
   font-weight: 800;
 }
 .eyebrow {
-  font-family: var(--font-body);
-  font-size: 15px;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
   line-height: 1.3;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--navy);
 }
@@ -239,17 +228,17 @@ figure {
 .display-xl {
   font-size: var(--display-xl);
   line-height: 0.92;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 .display-l {
   font-size: var(--display-l);
   line-height: 0.95;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 .h2 {
   font-size: var(--h2);
   line-height: 1.02;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 .h3 {
   font-size: var(--h3);
@@ -267,7 +256,7 @@ figure {
   font-size: var(--quote);
   font-weight: 800;
   line-height: 1.02;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 .lead {
   font-size: 21px;

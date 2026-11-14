@@ -44,31 +44,32 @@ const [walk, wheel, run] = copy.fiveK.title;
   .rise {
     display: block;
   }
-  /* Each line has its own voice: three faces from the site's set, three
-     colours from her palette. All sit on raspberry at display size
-     (white 4.9:1, aqua 3.9:1, navy 3.3:1; large text needs 3:1). */
-  .walk {
+  /* One race-poster face; each line takes a colour from her
+     palette. All sit on raspberry at display size (white 4.9:1, aqua 3.9:1,
+     navy 3.3:1; large text needs 3:1). */
+  .beats {
     font-family: var(--font-display);
     font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    line-height: 0.9;
+    /* Condensed, so it can run larger than the other display headings. */
+    font-size: clamp(68px, 9vw, 136px);
+  }
+  .walk {
     color: var(--white);
   }
   .wheel {
-    font-family: var(--font-logo);
-    font-weight: 700;
-    letter-spacing: -0.03em;
     color: var(--aqua);
   }
   .run {
-    font-family: var(--font-body);
-    font-style: italic;
-    font-weight: 800;
     color: var(--navy);
   }
   /* Sized by width, and by height too so a short landscape phone still shows
      all three lines with the buttons. */
   .beats--poster {
-    font-size: clamp(56px, min(12.5vw, 20vh), 180px);
-    line-height: 0.9;
+    font-size: clamp(64px, min(14vw, 22vh), 200px);
+    line-height: 0.86;
   }
   .beats--poster .beat:nth-child(2) {
     padding-inline-start: 18%;
