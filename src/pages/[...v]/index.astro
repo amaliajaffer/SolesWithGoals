@@ -34,36 +34,18 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
 ---
 
 <Base description={copy.introLine} variant={variant} ground="rasp" poster>
-  <section class:list={['hero', 'band-rasp', 'hero--poster', { 'hero--clip': photos }]} aria-labelledby="hero-title">
+  <section class:list={['hero', 'band-rasp', { 'hero--poster': !photos }]} aria-labelledby="hero-title">
     <Art name="hero-track" width={1200} height={520} eager class="hero-art" />
     <div class="wrap hero-row">
       <div class="hero-text stack">
-        <Beats id="hero-title" poster />
-        {
-          photos ? (
-            <div class="hero-foot">
-              <div class="stack">
-                <div class="stack-s">
-                  <p class="h3 hero-essence">{copy.essence}</p>
-                  <p class="lead hero-lead">{copy.introLine}</p>
-                </div>
-                <div class="row">
-                  <a class="btn btn--on-rasp" href={link(variant, 'get-involved')}>Get involved</a>
-                </div>
-              </div>
-              <TrackMedia id="hero-clip" eager class="hero-media" />
-            </div>
-          ) : (
-            <>
-              <p class="lead hero-lead"><span class="lead-essence">{copy.essence}</span> {copy.introLine}</p>
-              <div class="row">
-                <a class="btn btn--on-rasp" href={link(variant, 'get-involved')}>Get involved</a>
-                <a class="btn btn--outline-light" href={link(variant, 'the-5k')}>See the 5K</a>
-              </div>
-            </>
-          )
-        }
+        <Beats id="hero-title" poster={!photos} />
+        <p class="lead hero-lead"><span class="lead-essence">{copy.essence}</span> {copy.introLine}</p>
+        <div class="row">
+          <a class="btn btn--on-rasp" href={link(variant, 'get-involved')}>Get involved</a>
+          <a class="btn btn--outline-light" href={link(variant, 'the-5k')}>See the 5K</a>
+        </div>
       </div>
+      {photos && <TrackMedia id="hero-clip" shape="portrait" eager class="hero-media" />}
     </div>
   </section>
 
@@ -202,27 +184,9 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
   .lead-essence {
     font-weight: 700;
   }
-  /* One size for the poster slogan and the clip set in its gap. */
-  .hero {
-    --poster: clamp(64px, min(14vw, 22vh), 200px);
-  }
-  .hero-essence {
-    color: var(--aqua);
-  }
-  /* Her clip in natural colour, in its own column beside the line and the
-     button, under the poster. 4:3 keeps all of her from the portrait source. */
-  .hero-foot {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--space-48);
-    align-items: center;
-  }
-  .hero--clip :global(.hero-media) {
-    aspect-ratio: 4 / 3;
-  }
-  .hero--clip :global(.hero-media img),
-  .hero--clip :global(.hero-media video) {
-    object-position: 50% 55%;
+  /* Her clip, in natural colour, in the column beside the text. */
+  .hero :global(.hero-media) {
+    flex: 0 0 min(500px, 38%);
   }
   .statement {
     font-weight: 700;
@@ -348,15 +312,6 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
     .hero--poster .hero-row {
       padding-bottom: calc(43vw + var(--space-16));
     }
-    /* Up to 860: slogan, lead and button first, her clip after (no empty
-       band kept for the lanes). */
-    .hero--clip .hero-row {
-      padding-bottom: var(--space-48);
-    }
-    .hero-foot {
-      grid-template-columns: minmax(0, 1fr);
-      gap: var(--space-32);
-    }
     .hero-row {
       flex-direction: column;
       align-items: stretch;
@@ -364,7 +319,10 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
       padding-top: var(--space-32);
       padding-bottom: var(--space-48);
     }
-
+    .hero :global(.hero-media) {
+      flex: none;
+      width: min(100%, 340px);
+    }
     .story {
       flex-direction: column;
       align-items: stretch;
