@@ -1,18 +1,25 @@
 ---
-// The cream header at the top of an inner page: label, title, and a lead line.
+// The top of an inner page: one raspberry band behind the nav (as on Home and
+// About), the title and a lead line in white, and Home's track lanes in the
+// band's empty bottom-right corner from 1024 px, where it clears the text. It stays under 480 px tall at
+// 1440 and under one screen on a phone.
+import Art from './Art.astro';
+
 interface Props {
   eyebrow?: string;
   title: string;
   lead?: string | null;
   flush?: boolean;
-  // rasp: the raspberry band from Home's hero (About opens with it).
+  // cream: the old quiet head, kept for a page that needs it.
   tone?: 'cream' | 'rasp';
 }
-const { eyebrow, title, lead, flush = false, tone = 'cream' } = Astro.props;
+const { eyebrow, title, lead, flush = false, tone = 'rasp' } = Astro.props;
+const rasp = tone === 'rasp';
 ---
 
-<header class:list={['page-head', tone === 'rasp' ? 'band-rasp' : 'band-cream', { 'page-head--flush': flush }]}>
-  <div class="wrap stack-m">
+<header class:list={['page-head', rasp ? 'band-rasp' : 'band-cream', { 'page-head--flush': flush }]}>
+  {rasp && <Art name="hero-track" width={1200} height={520} class="head-art" />}
+  <div class="wrap stack-m head-text">
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h1 class="display-l">{title}</h1>
     {lead && <p class="lead body measure">{lead}</p>}
@@ -28,5 +35,32 @@ const { eyebrow, title, lead, flush = false, tone = 'cream' } = Astro.props;
   }
   .page-head--flush {
     padding-bottom: 0;
+  }
+  .head-text {
+    position: relative;
+    z-index: 1;
+  }
+  .head-text h1 {
+    max-width: 960px;
+  }
+  .page-head :global(.head-art) {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: min(560px, 40vw);
+  }
+  /* The lanes keep their own column: the title, lead and anything in the
+     slot wrap before the art's box (its width plus 32 px), so no glyph ever
+     sits on a lane, tick or dot. */
+  @media (min-width: 1024px) {
+    .head-text {
+      padding-inline-end: calc(min(560px, 40vw) + var(--space-32));
+    }
+  }
+  /* Below 1024 the lanes would crowd the title or lead: hidden, as on phones. */
+  @media (max-width: 1023px) {
+    .page-head :global(.head-art) {
+      display: none;
+    }
   }
 </style>

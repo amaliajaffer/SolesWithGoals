@@ -23,17 +23,38 @@ function walk(dir) {
 const textFiles = (dir) => walk(dir).filter((f) => /\.(html|txt|xml)$/.test(f));
 const read = (dir, file) => readFileSync(join(dir, file), 'utf8');
 
-test('launch build: no review version and no review media', () => {
+// Her photos and clips ship only once photosConsent is set in data/site.ts.
+const photosConsent = /^\s*photosConsent:\s*true,/m.test(readFileSync(join(project, 'src', 'data', 'site.ts'), 'utf8'));
+
+test('launch build: no review version, and her media only with consent', () => {
   assert.ok(existsSync(dist), 'run `npm run build` first');
   assert.ok(!existsSync(join(dist, 'with-photos')), 'dist/with-photos must not exist');
-  assert.ok(!existsSync(join(dist, 'media')), 'dist/media must not exist');
   const media = walk(dist).filter((f) => /\.(webp|jpe?g|mp4|webm|mov)$/i.test(f) && !/og-image/.test(f));
-  assert.deepEqual(media, [], 'no photos or clips in dist');
+  if (!photosConsent) {
+    assert.ok(!existsSync(join(dist, 'media')), 'dist/media must not exist');
+    assert.deepEqual(media, [], 'no photos or clips in dist');
+  } else {
+    // Only the files a page links to, and the clips as small MP4s (no animated WebP).
+    assert.ok(media.length > 0, 'the photos version ships her media');
+    for (const file of media) {
+      assert.ok(!/\.webp$/i.test(file), `${file}: clips ship as MP4`);
+      assert.ok(statSync(file).size <= 1024 * 1024, `${file} is over 1 MB`);
+    }
+  }
   for (const file of textFiles(dist)) {
     const text = readFileSync(file, 'utf8');
     assert.ok(!text.includes('with-photos'), `${file} mentions with-photos`);
-    assert.ok(!text.includes('/media/'), `${file} links to /media/`);
+    if (!photosConsent) assert.ok(!text.includes('/media/'), `${file} links to /media/`);
     assert.ok(!text.includes('Review build'), `${file} shows the review bar`);
+    assert.ok(!text.includes('data-note='), `${file} shows a review marker`);
+  }
+});
+
+test('launch build: no Special Olympics Pakistan claim before its written OK', () => {
+  const sopConfirmed = /^\s*sop:\s*true,/m.test(readFileSync(join(project, 'src', 'data', 'site.ts'), 'utf8'));
+  if (sopConfirmed) return;
+  for (const file of textFiles(dist)) {
+    assert.ok(!readFileSync(file, 'utf8').includes('Special Olympics Pakistan'), `${file} names Special Olympics Pakistan`);
   }
 });
 

@@ -1,6 +1,66 @@
 /* Amalia's Rally palette, with the contrast pairs from her colour sheet:
    navy on white 16.2:1, white on raspberry 4.9:1, #B00B4B for small
    raspberry text (7.0:1), aqua only as a fill or on navy (12.8:1). */
+/* Fallback faces with her fonts' metrics (ascent, descent, average width,
+   measured in the browser). If a web font arrives after the first paint, the
+   text it replaces already sits on the same baseline at about the same width,
+   so nothing moves (CLS 0 even on a slow phone or a busy CPU). */
+@font-face {
+  font-family: 'Big Shoulders Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT');
+  font-weight: 100 900;
+  size-adjust: 80%;
+  ascent-override: 123.75%;
+  descent-override: 26.25%;
+  line-gap-override: 0%;
+}
+/* Capitals only (the slogan, The 5K's wordmark) run narrower than mixed case. */
+@font-face {
+  font-family: 'Big Shoulders Caps Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT');
+  font-weight: 100 900;
+  size-adjust: 73.1%;
+  ascent-override: 135.4%;
+  descent-override: 28.7%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Big Shoulders Wordmark Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT');
+  font-weight: 100 900;
+  size-adjust: 64%;
+  ascent-override: 154.7%;
+  descent-override: 32.8%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Atkinson Fallback';
+  src: local('Arial'), local('ArialMT');
+  font-weight: 100 500;
+  size-adjust: 100%;
+  ascent-override: 98%;
+  descent-override: 32%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Atkinson Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT');
+  font-weight: 600 900;
+  size-adjust: 98.2%;
+  ascent-override: 99.8%;
+  descent-override: 32.6%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Bricolage Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT');
+  font-weight: 100 900;
+  size-adjust: 101.7%;
+  ascent-override: 91.4%;
+  descent-override: 26.5%;
+  line-gap-override: 0%;
+}
+
 :root {
   --navy: #07195a;
   --navy-800: #223564;
@@ -19,9 +79,9 @@
   --note-bg: #fff1b8;
   --marker: #ffe066;
   --note-line: #e3c766;
-  --font-display: 'Big Shoulders Variable', 'Atkinson Hyperlegible Next Variable', system-ui, sans-serif;
-  --font-body: 'Atkinson Hyperlegible Next Variable', system-ui, sans-serif;
-  --font-logo: 'Bricolage Grotesque Variable', var(--font-display);
+  --font-display: 'Big Shoulders Variable', 'Big Shoulders Fallback', system-ui, sans-serif;
+  --font-body: 'Atkinson Hyperlegible Next Variable', 'Atkinson Fallback', system-ui, sans-serif;
+  --font-logo: 'Bricolage Grotesque Variable', 'Bricolage Fallback', var(--font-display);
 
   /* Shape and spacing */
   --radius: 12px;
@@ -212,7 +272,7 @@ figure {
 }
 .eyebrow {
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 800;
   line-height: 1.3;
   letter-spacing: 0.06em;
@@ -301,16 +361,12 @@ figure {
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  transition: transform 0.18s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 .btn:hover {
   border-color: var(--rasp-text);
   background: var(--rasp-text);
   color: var(--white);
-  transform: translateY(-2px);
-}
-.btn:active {
-  transform: none;
 }
 .btn--outline {
   border-color: var(--navy);
@@ -348,7 +404,6 @@ figure {
   background: var(--cream);
   color: var(--navy-700);
   cursor: default;
-  transform: none;
 }
 .self-start {
   align-self: flex-start;
@@ -388,114 +443,27 @@ figure {
   box-decoration-break: clone;
 }
 
-/* Page changes: the header stays put, the page fades and rises in */
-.site-header {
-  view-transition-name: site-header;
-}
-@keyframes vt-out {
-  to {
-    opacity: 0;
-  }
-}
-@keyframes vt-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-}
+/* One motion on the whole site: the stride rise in Home's slogan
+   (Beats.astro). No page fade, no lifts, no staggered lists, no ring draw. */
 @media (prefers-reduced-motion: no-preference) {
-  @view-transition {
-    navigation: auto;
-  }
-  ::view-transition-old(root) {
-    animation: vt-out 0.22s ease both;
-  }
-  ::view-transition-new(root) {
-    animation: vt-in 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  }
   html {
     scroll-behavior: smooth;
   }
 }
 
-/* Lists that run in order once seen (data-inview on the list, --i on each item) */
-@media (prefers-reduced-motion: no-preference) {
-  .js [data-inview] > .step {
-    transition: opacity 0.5s ease, translate 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
-    transition-delay: calc(var(--i, 0) * 110ms);
-  }
-  .js [data-inview]:not(.in-view) > .step {
-    opacity: 0;
-    translate: 0 18px;
-  }
-}
-@media print {
-  .js [data-inview] > .step {
-    opacity: 1;
-    translate: none;
-  }
-}
-
-/* The Goal Ring drawing itself: the arc runs round once and the dots settle
-   in, all inside 600 ms. */
-@keyframes ring-draw {
-  from {
-    stroke-dashoffset: 58;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-@keyframes dot-in {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-.ring--draw .arc {
-  stroke-dasharray: 58;
-}
-.ring--draw circle {
-  transform-box: fill-box;
-  transform-origin: center;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .ring--draw .arc {
-    animation: ring-draw 0.45s ease-out both;
-  }
-  .ring--draw circle {
-    animation: dot-in 0.2s ease-out both;
-  }
-  .ring--draw .d1 {
-    animation-delay: 0.25s;
-  }
-  .ring--draw .d2 {
-    animation-delay: 0.3s;
-  }
-  .ring--draw .d3 {
-    animation-delay: 0.35s;
-  }
-  .ring--draw .d4 {
-    animation-delay: 0.4s;
-  }
-  /* Rings further down the page wait until they're seen. */
-  .js .ring--draw:not(.in-view) .arc,
-  .js .ring--draw:not(.in-view) circle {
-    animation-play-state: paused;
-  }
-}
-
-/* Moving clips: the still paints first and the loop covers it once loaded.
-   Paused or reduced motion hides the loop. */
+/* Moving clips: the still paints first and the loop covers it once it plays
+   (scripts/clips.ts). Paused or reduced motion hides the loop. */
 .clip-anim {
   z-index: 1;
 }
+[data-playing] > .clip-still {
+  opacity: 0;
+}
 .is-paused .clip-anim {
   display: none;
+}
+.is-paused > .clip-still {
+  opacity: 1;
 }
 
 /* Pages with sticky anchors: a target stops just under the bar. */

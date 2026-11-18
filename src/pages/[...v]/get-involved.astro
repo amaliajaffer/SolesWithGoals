@@ -22,7 +22,7 @@ const wide = wideOnPhone([...copy.involved.roles, ...(showPending(donateReady) ?
 const span = { three: bibCount % 3 === 2, two: bibCount % 2 === 1 };
 ---
 
-<Base title="Get involved" description={copy.involved.title} variant={variant} current="involved">
+<Base title="Get involved" description={copy.involved.title} variant={variant} current="involved" ground="rasp">
   <PageHead title={copy.involved.title} lead={hasSignupRoute ? copy.involved.formNote : null} />
 
   <section class="sec" aria-label="Ways to help">

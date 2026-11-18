@@ -23,6 +23,8 @@ const { target, label, class: className } = Astro.props;
       button.setAttribute('aria-pressed', String(paused));
       target?.classList.toggle('is-paused', paused);
       if (word) word.textContent = paused ? 'Play' : 'Pause';
+      // Her clips (scripts/clips.ts) pause and play with it.
+      document.dispatchEvent(new CustomEvent('clip-pause', { detail: { target, paused } }));
     });
   });
 </script>

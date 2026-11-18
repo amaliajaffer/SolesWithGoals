@@ -1,8 +1,8 @@
 ---
 // The top of About "begins with video" (her intake). The documentary plays here
 // once site.film is set (clips after her December trip). Until then the photos
-// version shows her running clip and the plain version says
-// the film is coming.
+// version shows her running clip (a small MP4, full frame, in natural
+// colour) and the plain version says the film is coming.
 // Her media lives in /media (not imported), so a build without the photos
 // version never ships it; astro.config copies only files a page links to.
 import ComingSoon from './ComingSoon.astro';
@@ -16,6 +16,10 @@ interface Props {
 const { variant } = Astro.props;
 const film = site.film;
 ---
+
+<script>
+  import '../scripts/clips';
+</script>
 
 {
   film ? (
@@ -31,11 +35,8 @@ const film = site.film;
     </figure>
   ) : variant === 'photos' ? (
     <figure class="frame frame--clip" id="story-clip">
-      <picture>
-        <source media="(prefers-reduced-motion: reduce)" srcset="/media/story-still.jpg" />
-        <img class="clip-anim" src="/media/story-loop.webp" width="720" height="540" alt="" decoding="async" />
-      </picture>
       <img class="clip-still" src="/media/story-still.jpg" width="720" height="540" decoding="async" loading="eager" alt="Amalia running through a park" />
+      <video class="clip-anim" src="/media/story-loop.mp4" width="720" height="540" poster="/media/story-still.jpg" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" data-clip></video>
       <PauseButton target="story-clip" label="the opening clip" class="clip-pause" />
     </figure>
   ) : (
@@ -55,7 +56,7 @@ const film = site.film;
     background: var(--navy);
   }
   .frame img,
-  .frame :global(img),
+  .frame video,
   .frame iframe {
     position: absolute;
     inset: 0;
@@ -72,10 +73,14 @@ const film = site.film;
     z-index: 2;
     translate: -50% 0;
   }
-  /* Her clip is 720 px wide: shown at its own size so it stays sharp. */
+  /* Her clip across the full frame at 16:9, in natural colour (adidas About:
+     footage straight under the sub-nav). */
   .frame--clip {
-    max-width: 720px;
-    aspect-ratio: 14 / 9;
+    aspect-ratio: 16 / 9;
+  }
+  .frame--clip img,
+  .frame--clip video {
+    object-position: 50% 0%;
   }
   .frame--video {
     aspect-ratio: 16 / 9;
@@ -89,9 +94,10 @@ const film = site.film;
     position: absolute;
     top: calc(100% + 10px);
   }
+  /* Phones keep the taller crop, so she stays the size she is today. */
   @media (max-width: 760px) {
     .frame--clip {
-      max-width: none;
+      aspect-ratio: 14 / 9;
     }
   }
 </style>

@@ -28,7 +28,7 @@ const details = [
 const closingTitle = event.date && donateReady ? 'From Central Park to Pakistan.' : copy.startLine;
 ---
 
-<Base title="The 5K" description={copy.fiveK.launch} variant={variant} current="5k" ground="rasp">
+<Base title="The 5K" description={copy.fiveK.launch} variant={variant} current="5k" ground="rasp" poster>
   <section class="hero band-rasp" aria-labelledby="fivek-title">
     <Art name="hero-track" width={1200} height={520} eager class="hero-art" />
     <div class="wrap hero-in">
@@ -157,7 +157,7 @@ const closingTitle = event.date && donateReady ? 'From Central Park to Pakistan.
     flex-direction: column;
     align-items: flex-end;
     align-self: start;
-    font-family: var(--font-display);
+    font-family: 'Big Shoulders Variable', 'Big Shoulders Wordmark Fallback', system-ui, sans-serif;
     font-size: var(--display-l);
     font-weight: 800;
     line-height: 1;

@@ -18,7 +18,7 @@ const pending = !(site.confirmed.sop && site.confirmed.donate);
 const givesBack = copy.pillars.find((pillar) => pillar.sop) ?? copy.pillars[3];
 ---
 
-<Base title="Fundraising" description={givesBack.title} variant={variant} current="donate">
+<Base title="Fundraising" description={givesBack.title} variant={variant} current="donate" ground="rasp">
   <PageHead title={givesBack.title}>
     {pending && <p class="pending">Review build: this page goes live once Special Olympics Pakistan confirms in writing and the fundraiser exists (D2, D3).</p>}
   </PageHead>

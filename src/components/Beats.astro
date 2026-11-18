@@ -2,6 +2,10 @@
 // "Walk it. / Wheel it. / Run it." from her launch post. The first line is
 // still (it paints first); the other two rise out of a mask one after another
 // like strides. The text is always in the page; under reduced motion nothing moves.
+// Her "different font per line", inside one family: WALK IT. solid,
+// WHEEL IT. in the Inline cut, RUN IT. in the Stencil cut.
+import '@fontsource-variable/big-shoulders-inline/opsz.css';
+import '@fontsource-variable/big-shoulders-stencil/opsz.css';
 import { copy } from '../data/copy';
 
 interface Props {
@@ -48,7 +52,8 @@ const [walk, wheel, run] = copy.fiveK.title;
      palette. All sit on raspberry at display size (white 4.9:1, aqua 3.9:1,
      navy 3.3:1; large text needs 3:1). */
   .beats {
-    font-family: var(--font-display);
+    /* The caps fallback has the cuts' metrics, so nothing moves when they load. */
+    font-family: 'Big Shoulders Variable', 'Big Shoulders Caps Fallback', system-ui, sans-serif;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0;
@@ -61,14 +66,16 @@ const [walk, wheel, run] = copy.fiveK.title;
   }
   .wheel {
     color: var(--aqua);
+    font-family: 'Big Shoulders Inline Variable', 'Big Shoulders Variable', 'Big Shoulders Caps Fallback', system-ui, sans-serif;
   }
   .run {
     color: var(--navy);
+    font-family: 'Big Shoulders Stencil Variable', 'Big Shoulders Variable', 'Big Shoulders Caps Fallback', system-ui, sans-serif;
   }
   /* Sized by width, and by height too so a short landscape phone still shows
      all three lines with the buttons. */
   .beats--poster {
-    font-size: clamp(64px, min(14vw, 22vh), 200px);
+    font-size: var(--poster, clamp(64px, min(14vw, 22vh), 200px));
     line-height: 0.86;
   }
   .beats--poster .beat:nth-child(2) {

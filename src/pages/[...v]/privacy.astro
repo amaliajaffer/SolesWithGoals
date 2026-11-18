@@ -13,7 +13,7 @@ const { variant } = Astro.props as { variant: Variant };
 const filmHost = site.film ? new URL(site.film.embedUrl).hostname.replace(/^www\./, '') : null;
 ---
 
-<Base title="Privacy" description="How the Soles with Goals website handles information about you." variant={variant}>
+<Base title="Privacy" description="How the Soles with Goals website handles information about you." variant={variant} ground="rasp">
   <PageHead title="Privacy" lead="Here’s what this website does, and doesn’t do, with your information." />
 
   <section class="sec">

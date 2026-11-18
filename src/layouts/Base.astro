@@ -7,6 +7,15 @@ import '@fontsource-variable/atkinson-hyperlegible-next/wght-italic.css';
 // Bricolage stays only for her wordmark (Logo.astro).
 import '@fontsource-variable/bricolage-grotesque';
 import '../styles/global.css';
+// Preloaded so the headings and body paint in their own faces first time
+// (no reflow when a font swaps in: CLS 0). Same files the @font-face rules use.
+import displayFont from '@fontsource-variable/big-shoulders/files/big-shoulders-latin-opsz-normal.woff2?url';
+import bodyFont from '@fontsource-variable/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-wght-normal.woff2?url';
+// The wordmark in the header: Bricolage, with "with" in Atkinson italic.
+import logoFont from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2?url';
+import logoItalic from '@fontsource-variable/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-wght-italic.woff2?url';
+import inlineFont from '@fontsource-variable/big-shoulders-inline/files/big-shoulders-inline-latin-opsz-normal.woff2?url';
+import stencilFont from '@fontsource-variable/big-shoulders-stencil/files/big-shoulders-stencil-latin-opsz-normal.woff2?url';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ReviewBar from '../components/ReviewBar.astro';
@@ -20,8 +29,11 @@ interface Props {
   current?: string;
   // Raspberry header on Home and The 5K, white elsewhere.
   ground?: 'white' | 'rasp';
+  // The page opens on the three-cut slogan (Beats): preload its two extra cuts.
+  poster?: boolean;
 }
-const { title, description, variant, current, ground = 'white' } = Astro.props;
+const { title, description, variant, current, ground = 'white', poster = false } = Astro.props;
+const preload = [displayFont, bodyFont, logoFont, logoItalic, ...(poster ? [inlineFont, stencilFont] : [])];
 const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · Every pace counts`;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 // Share cards need absolute image URLs; without a domain yet, fall back to the path.
@@ -44,6 +56,7 @@ const organisation = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
+    {preload.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
     <meta name="description" content={description} />
     {site.review && <meta name="robots" content="noindex, nofollow" />}
     {canonical && <link rel="canonical" href={canonical} />}

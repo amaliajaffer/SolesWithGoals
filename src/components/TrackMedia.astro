@@ -1,7 +1,7 @@
 ---
 // Her running clip in a landscape or portrait frame with one track-bend corner: her own
-// slowed-down loop over its still, with a Pause button. Paused or reduced
-// motion shows the still. Used only in the version with her photos.
+// slowed-down loop (a small MP4) over its still, with a Pause button. Paused,
+// reduced motion or no JavaScript shows the still. Used only in the version with her photos.
 // Her media lives in /media (not imported), so a build without the photos
 // version never ships it; astro.config copies only files a page links to.
 import PauseButton from './PauseButton.astro';
@@ -9,7 +9,7 @@ import PauseButton from './PauseButton.astro';
 interface Props {
   id: string;
   shape?: 'landscape' | 'portrait';
-  // duo: navy-to-white duotone, so the clip belongs to the raspberry band it sits on.
+  // duo: navy-to-raspberry duotone, so her running matches the pink.
   tone?: 'colour' | 'duo';
   eager?: boolean;
   class?: string;
@@ -18,13 +18,14 @@ const { id, shape = 'landscape', tone = 'colour', eager = false, class: classNam
 ---
 
 <figure class:list={['media', `media--${shape}`, { 'media--duo': tone === 'duo' }, className]} id={id}>
-        <picture>
-          <source media="(prefers-reduced-motion: reduce)" srcset="/media/run-still.jpg" />
-          <img class="clip-anim" src="/media/run-loop.webp" width="540" height="720" alt="" decoding="async" loading={eager ? 'eager' : 'lazy'} fetchpriority="low" />
-        </picture>
-        <img class="clip-still" src="/media/run-still.jpg" width="540" height="720" decoding="async" loading={eager ? 'eager' : 'lazy'} alt="Amalia running along a park trail" />
-        <PauseButton target={id} label="the running clip" class="media-pause" />
+  <img class="clip-still" src="/media/run-still.jpg" width="540" height="720" decoding="async" loading={eager ? 'eager' : 'lazy'} alt="Amalia running along a park trail" />
+  <video class="clip-anim" src="/media/run-loop.mp4" width="540" height="720" poster="/media/run-still.jpg" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" data-clip></video>
+  <PauseButton target={id} label="the running clip" class="media-pause" />
 </figure>
+
+<script>
+  import '../scripts/clips';
+</script>
 
 <style>
   .media {
@@ -45,7 +46,7 @@ const { id, shape = 'landscape', tone = 'colour', eager = false, class: classNam
     aspect-ratio: 21 / 26;
   }
   .media img,
-  .media :global(img) {
+  .media video {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -53,14 +54,15 @@ const { id, shape = 'landscape', tone = 'colour', eager = false, class: classNam
     object-fit: cover;
     object-position: 50% 35%;
   }
-  /* Duotone: grey footage with navy lifted into the shadows. Her running
-     stays readable; the park greens turn into the brand's navy and white. */
+  /* Duotone: grey footage, navy in the shadows and raspberry in the light.
+     Her running stays readable; the park greens turn into her brand pair. */
   .media--duo {
     isolation: isolate;
-    background: var(--white);
+    background: var(--rasp);
   }
-  .media--duo img {
-    filter: grayscale(1) contrast(1.3) brightness(1.1);
+  .media--duo img,
+  .media--duo video {
+    filter: grayscale(1) contrast(1.4) brightness(0.75);
     mix-blend-mode: multiply;
   }
   .media--duo::after {

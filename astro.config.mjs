@@ -14,7 +14,7 @@ const site = process.env.SITE_URL || undefined;
 // version with her photos. The plain version never ships them.
 const MEDIA_DIR = fileURLToPath(new URL('./media/', import.meta.url));
 /** @type {Record<string, string>} */
-const TYPES = { '.jpg': 'image/jpeg', '.webp': 'image/webp' };
+const TYPES = { '.jpg': 'image/jpeg', '.webp': 'image/webp', '.mp4': 'video/mp4' };
 
 /**
  * @param {string} dir

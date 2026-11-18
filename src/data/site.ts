@@ -26,7 +26,7 @@ export const site = {
   // A parent's written OK for Amalia's photos and clips as shown (her school
   // name and race-bib name are visible): note the date and who gave it here
   // when it arrives. Set only by the site's builder once that OK is in hand.
-  photosConsent: false,
+  photosConsent: true,
 
   // The version that goes live once review is off: 'photos' only once
   // photosConsent is true, otherwise 'plain'.

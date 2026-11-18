@@ -73,8 +73,8 @@ const menu: Item[] = [...main.slice(0, 4), involved, ...(showDonate ? [donate] :
   <nav id="site-menu" class="panel" aria-label="Menu" hidden>
     <ul class="wrap">
       {
-        menu.map((item, index) => (
-          <li style={`--i: ${index}`}>
+        menu.map((item) => (
+          <li>
             <a
               class:list={{ gate: item.gate }}
               data-note={item.gate ? 'needs D2 + D3' : undefined}
@@ -174,7 +174,6 @@ const menu: Item[] = [...main.slice(0, 4), involved, ...(showDonate ? [donate] :
     background: currentColor;
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.25s ease;
   }
   .nav-link:hover,
   .nav-link[aria-current='page'] {
@@ -232,28 +231,6 @@ const menu: Item[] = [...main.slice(0, 4), involved, ...(showDonate ? [donate] :
   }
   .panel :focus-visible {
     outline-color: var(--rasp-text);
-  }
-  /* The menu drops open and its links follow one after another. */
-  @keyframes menu-open {
-    from {
-      opacity: 0;
-      translate: 0 -8px;
-    }
-  }
-  @keyframes menu-link {
-    from {
-      opacity: 0;
-      translate: -12px 0;
-    }
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .panel:not([hidden]) {
-      animation: menu-open 0.25s ease both;
-    }
-    .panel:not([hidden]) li {
-      animation: menu-link 0.32s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-      animation-delay: calc(var(--i, 0) * 35ms + 60ms);
-    }
   }
   @media (max-width: 999px) {
     .nav {
