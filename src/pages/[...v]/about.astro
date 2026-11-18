@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Art from '../../components/Art.astro';
 import Gate from '../../components/Gate.astro';
 import FilmIntro from '../../components/FilmIntro.astro';
 import GoalRing from '../../components/GoalRing.astro';
@@ -113,6 +114,7 @@ const keys = ['key--arc', 'key--dots', 'key--dot'];
         {
           copy.values.map((value) => (
             <li class="stack-s value">
+              <Art name={value.icon} width={56} height={56} class="value-icon" />
               <h3 class="h4">{value.title}</h3>
               <p class="body">{value.text}</p>
             </li>
@@ -240,7 +242,7 @@ const keys = ['key--arc', 'key--dots', 'key--dot'];
   }
   .value {
     display: grid;
-    grid-row: span 2;
+    grid-row: span 3;
     grid-template-rows: subgrid;
     gap: var(--space-8);
     margin-bottom: var(--space-24);

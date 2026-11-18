@@ -57,13 +57,13 @@ export const copy = {
   },
 
   values: [
-    { title: 'Belonging', text: 'Every girl on the track is an athlete. She isn’t a case, a charity or an exception. She’s a valued teammate.' },
-    { title: 'Access, not ability', text: 'If a girl can’t take part, the problem is the design, not the girl. We change the pace, the words and the plan, never the invitation.' },
-    { title: 'Women first', text: 'Led by women, taught by women and decided by women. Families can trust it, and girls can own it.' },
-    { title: 'Beyond the sport', text: 'Running is where it all starts. Confidence, leadership and the courage to build something of your own are where it leads.' },
-    { title: 'Honesty', text: 'We share what we know, what we’re still learning and what hasn’t worked. We’re a new community with no track record, so we earn trust by never pretending otherwise.' },
-    { title: 'Persistence', text: 'Showing up is the whole sport. We measure ourselves by who comes back.' },
-    { title: 'Nothing about us without us', text: 'Decisions about girls with disabilities are made with them in the room.' },
+    { icon: 'value-belonging' as const, title: 'Belonging', text: 'Every girl on the track is an athlete. She isn’t a case, a charity or an exception. She’s a valued teammate.' },
+    { icon: 'value-access' as const, title: 'Access, not ability', text: 'If a girl can’t take part, the problem is the design, not the girl. We change the pace, the words and the plan, never the invitation.' },
+    { icon: 'value-women-first' as const, title: 'Women first', text: 'Led by women, taught by women and decided by women. Families can trust it, and girls can own it.' },
+    { icon: 'value-beyond' as const, title: 'Beyond the sport', text: 'Running is where it all starts. Confidence, leadership and the courage to build something of your own are where it leads.' },
+    { icon: 'value-honesty' as const, title: 'Honesty', text: 'We share what we know, what we’re still learning and what hasn’t worked. We’re a new community with no track record, so we earn trust by never pretending otherwise.' },
+    { icon: 'value-persistence' as const, title: 'Persistence', text: 'Showing up is the whole sport. We measure ourselves by who comes back.' },
+    { icon: 'value-with-us' as const, title: 'Nothing about us without us', text: 'Decisions about girls with disabilities are made with them in the room.' },
   ],
 
   fiveK: {
