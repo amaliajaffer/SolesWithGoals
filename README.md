@@ -6,6 +6,8 @@ A static site built with [Astro](https://astro.build). There's no database, no s
 code, and no cookies or analytics. Sign-ups open Google Forms in Amalia's account, and
 donations (once they open) link out to the fundraiser's own page.
 
+**To change wording, links, dates, photos or the film, see [HANDOVER.md](HANDOVER.md).**
+
 ## Run it
 
 Needs Node 22.19 or newer (see `.nvmrc`).
@@ -65,10 +67,11 @@ ships them.
    photos, once a parent's written OK is in, change this one line
    in `src/data/site.ts`, noting the date and who gave the OK in the comment above it:
    `photosConsent: false,` → `photosConsent: true,`
-3. Host on any static host: build command `npm run build`, output folder `dist`, and an
+3. The site is hosted on Vercel, which builds every push to `main` (`vercel.json` sets
+   the security headers). Build command `npm run build`, output folder `dist`, and an
    environment variable `SITE_URL` set to the domain (canonical links, the sitemap and
-   share cards need it). On Render, `render.yaml` sets this up: New > Blueprint, pick
-   this repo, then fill in `SITE_URL`.
+   share cards need it). Any other static host works the same way; on Render,
+   `render.yaml` sets this up: New > Blueprint, pick this repo, then fill in `SITE_URL`.
 4. Update the "Last updated" date on the privacy page, and keep that page matching what
    the site loads (an embedded video or analytics, for example).
 

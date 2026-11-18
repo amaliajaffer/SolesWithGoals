@@ -1,6 +1,7 @@
 // Amalia's words, from her brand pack, logo system, launch post and her
 // website doc, edited for a friendly tone with no new facts or claims. Her
 // essay and its quote are signed with her name, so they stay word for word.
+// How to edit this file safely (quote marks, the curly ’): see HANDOVER.md.
 
 export const copy = {
   essence: 'Every pace counts.',
