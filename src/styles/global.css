@@ -73,6 +73,8 @@
   --rasp-text: #b00b4b;
   --rasp-on-dark: #ff5c93;
   --aqua: #a0f2f5;
+  --aqua-100: #e3fbfc;
+  --rasp-100: #fde8f0;
   --cream: #fff8f4;
   --white: #ffffff;
   --note-text: #5c4400;
@@ -247,6 +249,13 @@ figure {
 }
 .band-cream {
   background: var(--cream);
+}
+/* Light tints of her aqua and raspberry, so no Home section is plain white. */
+.band-aqua-tint {
+  background: var(--aqua-100);
+}
+.band-rasp-tint {
+  background: var(--rasp-100);
 }
 .band-rasp {
   background: var(--rasp);
