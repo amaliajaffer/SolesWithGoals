@@ -43,7 +43,8 @@ import { PHOTOS_PREFIX } from '../lib/variant';
   .nf :global(.nf-art) {
     width: 100%;
   }
-  @media (max-width: 720px) {
+  /* One column up to 860 px, so the two buttons keep one row at 768. */
+  @media (max-width: 860px) {
     .nf {
       grid-template-columns: 1fr;
     }

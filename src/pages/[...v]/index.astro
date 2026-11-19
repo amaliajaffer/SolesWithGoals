@@ -333,6 +333,12 @@ const sopAndVenue = site.confirmed.sop && Boolean(site.event.date);
       width: min(100%, 360px);
     }
   }
+  /* Phones: her clip takes the full content width, on the same gutter as the text. */
+  @media (max-width: 560px) {
+    .hero :global(.hero-media) {
+      width: 100%;
+    }
+  }
   @media (max-width: 720px) {
     .do-head :global(.do-art) {
       display: none;

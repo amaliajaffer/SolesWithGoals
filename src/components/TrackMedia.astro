@@ -45,6 +45,9 @@ const { id, shape = 'landscape', tone = 'colour', eager = false, class: classNam
   .media--portrait {
     aspect-ratio: 21 / 26;
   }
+  /* Her stills and loops carry two black columns on their left edge (from the
+     source footage). Scaling the picture 2% from its centre crops 1% off each
+     side, so it fills the frame edge to edge with no dark or navy strip. */
   .media img,
   .media video {
     position: absolute;
@@ -53,6 +56,7 @@ const { id, shape = 'landscape', tone = 'colour', eager = false, class: classNam
     height: 100%;
     object-fit: cover;
     object-position: 50% 35%;
+    transform: scale(1.02);
   }
   /* Duotone: grey footage, navy in the shadows and raspberry in the light.
      Her running stays readable; the park greens turn into her brand pair. */

@@ -244,8 +244,10 @@ figure {
   gap: var(--space-12);
   align-items: center;
 }
+/* Running text: about 65 characters a line at every size (31em = 558px at
+   18px, 651px at 21px, 465px at 15px), never wider than 640px. */
 .measure {
-  max-width: 640px;
+  max-width: min(640px, 31em);
 }
 .band-cream {
   background: var(--cream);

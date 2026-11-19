@@ -42,6 +42,8 @@ const { items } = Astro.props;
     window.addEventListener('scroll', spy, { passive: true });
     spy();
   }
+  // Keyboard: a tab that gets focus scrolls fully into the phone row (clear of the fades).
+  for (const a of links) a.addEventListener('focus', () => a.scrollIntoView({ block: 'nearest', inline: 'nearest' }));
 </script>
 
 <style>
@@ -92,11 +94,19 @@ const { items } = Astro.props;
     .subtabs {
       padding: var(--space-12) 0;
     }
+    /* The row fades out across the gutter at both ends, so a tab that runs
+       past the edge reads as a peek (there is more) instead of being cut flat. */
     ul {
       flex-wrap: nowrap;
       overflow-x: auto;
       scrollbar-width: none;
       overscroll-behavior-x: contain;
+      scroll-padding-inline: calc(var(--gutter) + 6px);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent);
+    }
+    a {
+      padding: 8px 12px;
     }
     /* Room after the last tab so it doesn't end against the screen edge. */
     ul::after {

@@ -26,7 +26,7 @@ const run = Array.from({ length: 4 }, () => words).flat();
     position: relative;
     z-index: 2;
     overflow: hidden;
-    padding-block: var(--space-12);
+    padding-block: var(--space-16);
     /* The bands above and below show through the corners the tilt leaves. */
     background: linear-gradient(var(--rasp) 50%, var(--navy) 50%);
   }
@@ -46,6 +46,9 @@ const run = Array.from({ length: 4 }, () => words).flat();
     text-transform: uppercase;
     white-space: nowrap;
     rotate: -1.5deg;
+    /* Tilt around the middle of the screen, not the middle of the (much wider)
+       line, so the letters stay inside the band at both screen edges. */
+    transform-origin: 54vw 50%;
   }
   .ribbon-dot {
     flex: none;

@@ -62,8 +62,10 @@ const filmHost = site.film ? new URL(site.film.embedUrl).hostname.replace(/^www\
     max-width: 760px;
     gap: var(--space-16);
   }
+  /* About 65 characters a line (the site's running-text measure). */
   .body-text p,
   .body-text li {
+    max-width: 31em;
     color: var(--navy-700);
   }
   .list {

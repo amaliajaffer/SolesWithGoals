@@ -78,9 +78,12 @@ const film = site.film;
   .frame--clip {
     aspect-ratio: 16 / 9;
   }
+  /* Her clip has two black columns on its left edge (source footage): scaling
+     it 2% from its centre crops 1% off each side, so it fills the frame. */
   .frame--clip img,
   .frame--clip video {
     object-position: 50% 0%;
+    transform: scale(1.02);
   }
   .frame--video {
     aspect-ratio: 16 / 9;

@@ -87,7 +87,7 @@ const tabs = [
           ))
         }
       </ol>
-      <div class="stack-s measure">
+      <div class="stack-s measure work">
         <p class="lead body">{p.sessionsText}</p>
         {p.howWeWork.map((line) => <p class="body">{line}</p>)}
       </div>
@@ -155,6 +155,13 @@ const tabs = [
 </Base>
 
 <style>
+  /* Short paragraphs: even line lengths from tablet up, so no two-word last line
+     ("the team."); phones keep pretty wrapping (balance stops at six lines). */
+  @media (min-width: 600px) {
+    .work p {
+      text-wrap: balance;
+    }
+  }
   .target {
     scroll-margin-top: var(--tabs-h);
   }
@@ -179,7 +186,7 @@ const tabs = [
     display: flex;
     flex-direction: column;
     gap: var(--space-12);
-    max-width: 640px;
+    max-width: min(640px, 31em);
   }
   .more {
     align-self: flex-start;

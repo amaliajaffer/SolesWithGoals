@@ -41,7 +41,7 @@ const withArt = Astro.slots.has('art');
   }
   .h4,
   .small {
-    max-width: 640px;
+    max-width: min(640px, 31em);
   }
   .small {
     margin-top: calc(var(--space-8) * -1);

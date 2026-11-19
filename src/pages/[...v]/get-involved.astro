@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import Gate from '../../components/Gate.astro';
 import Bib from '../../components/Bib.astro';
 import ComingSoon from '../../components/ComingSoon.astro';
+import Art from '../../components/Art.astro';
 import PageHead from '../../components/PageHead.astro';
 import { variantPaths, link, type Variant } from '../../lib/variant';
 import { copy } from '../../data/copy';
@@ -46,7 +47,9 @@ const span = { three: bibCount % 3 === 2, two: bibCount % 2 === 1 };
           site.donateUrl ? (
             <a class="btn self-start" href={link(variant, 'fundraising')}>Donate</a>
           ) : (
-            <ComingSoon title="The fundraiser opens soon" />
+            <ComingSoon title="The fundraiser opens soon">
+              <Art slot="art" name="route-5k" width={600} height={360} />
+            </ComingSoon>
           )
         }
       </div>

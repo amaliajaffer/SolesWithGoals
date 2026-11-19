@@ -87,7 +87,7 @@ const description = s.intro.slice(0, s.intro.indexOf('. ') + 1);
   /* Opening line and byline stay in view on the left while the essay runs on the right. */
   .essay-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 640px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 31em);
     align-items: start;
     gap: var(--space-32) var(--space-64);
   }
@@ -107,7 +107,7 @@ const description = s.intro.slice(0, s.intro.indexOf('. ') + 1);
     display: flex;
     flex-direction: column;
     gap: var(--space-16);
-    max-width: 640px;
+    max-width: min(640px, 31em);
   }
   .essay .lead {
     color: var(--navy);

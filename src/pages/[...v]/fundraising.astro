@@ -3,6 +3,7 @@
 // confirmed in writing and the adult-owned fundraiser exists (plan D2, D3).
 import Base from '../../layouts/Base.astro';
 import ComingSoon from '../../components/ComingSoon.astro';
+import Art from '../../components/Art.astro';
 import Gate from '../../components/Gate.astro';
 import PageHead from '../../components/PageHead.astro';
 import TrackMedia from '../../components/TrackMedia.astro';
@@ -32,7 +33,9 @@ const givesBack = copy.pillars.find((pillar) => pillar.sop) ?? copy.pillars[3];
         site.donateUrl ? (
           <a class="btn self-start" href={site.donateUrl} rel="noopener">Donate</a>
         ) : (
-          <ComingSoon title="The fundraiser opens soon" />
+          <ComingSoon title="The fundraiser opens soon">
+            <Art slot="art" name="footprint-trail" width={280} height={180} />
+          </ComingSoon>
         )
       }
       <p class="small">Donations go through the fundraiser’s own page. This site never takes payments.</p>
